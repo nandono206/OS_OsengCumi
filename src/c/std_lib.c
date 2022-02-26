@@ -9,6 +9,11 @@ int mod(int a, int n) {
 
 void memcpy(byte *dest, byte *src, unsigned int n) {
     // Mengcopy n bytes yang ditunjuk src ke dest
+    int i = 0;
+    while (i < n) {
+        dest[i] = src[i];
+        i ++;
+    }
 }
 
 

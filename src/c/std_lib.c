@@ -16,7 +16,6 @@ void memcpy(byte *dest, byte *src, unsigned int n) {
     }
 }
 
-
 void strcpy(char *dst, char *src) {
     // Melakukan penyalinan null terminated string
     int i = 0;
@@ -27,4 +26,11 @@ void strcpy(char *dst, char *src) {
     dst[i] = '\0';
 }
 
-
+void clear(byte *ptr, unsigned int n) {
+    // Mengosongkan byte array yang memiliki panjang n
+    int i = 0;
+    while (i < n) {
+        ptr[i] = 0x0;
+        i ++;
+    }
+}

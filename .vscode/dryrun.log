@@ -1,0 +1,8 @@
+make.exe --dry-run --always-make --keep-going --print-directory
+make.exe: Entering directory `c:/tugas-besar-os-osengcumi'
+# TODO : Tambahkan untuk pembuatan image
+# TODO : Tambahkan untuk pembuatan bootloader
+# Opsional
+# TODO : Tambahkan untuk pembuatan kernel
+make.exe: Leaving directory `c:/tugas-besar-os-osengcumi'
+ 

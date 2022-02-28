@@ -6,6 +6,8 @@
 
 #include "header/kernel.h"
 
+void readSector(char *buffer, int sector);
+
 int main() {
   char *string = "Hai"; // Deklarasikan variabel pada awal scope
   int i = 0;
@@ -20,5 +22,27 @@ int main() {
 }
 
 void handleInterrupt21(int AX, int BX, int CX, int DX) {
-  // Definisi kosong
+  switch (AX) {
+    case 0x0:
+      printString(BX);
+      break;
+    case 0x1:
+      readString(BX);
+      break;
+    default:
+      printString("Invalid interrupt");
+  }
+
+}
+
+void printString(char *string) {
+  int count;
+  while (*(string + count) != '\0') {
+    char ah = *(string + count);
+    char al = 0xe;
+    int ax = al * 256 + ah;
+
+    interrupt(0x10, ax, 0, 0, 0);
+    count++;
+  }
 }

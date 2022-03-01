@@ -6,11 +6,9 @@
 
 #include "header/kernel.h"
 
-
-
 int main() {
   char buf[128];
-  //clearScreen();
+  clearScreen();
   makeInterrupt21();
 
   printString("Halo dunia!\r\n");
@@ -19,7 +17,6 @@ int main() {
 
   while (true);
 }
-
 
 void handleInterrupt21(int AX, int BX, int CX, int DX) {
   switch (AX) {
@@ -71,4 +68,14 @@ void readString(char *string) {
   // perpindahan line
   interrupt(0x10, 0xE00 + '\n', 0, 0, 0); 
 	interrupt(0x10, 0xE00 + '\r', 0, 0, 0);
+}
+
+void clearScreen() {
+   int AX, BX, DX;
+   AX = (0x07 << 8) | 0x00;
+   BX = (0x07 << 8) | 0;
+   DX = (24 << 8) | 79;
+   interrupt(0x10, AX, BX, 0, DX);
+   AX = (0x02 << 8) | 0x00;
+   interrupt(0x10, AX, 0, 0, 0);
 }

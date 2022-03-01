@@ -6,6 +6,16 @@
 int mod(int a, int n) {
     return a - n*(a/n);
 }
+int div(int a, int b){
+    return a/b;
+}
+
+unsigned int strlen(char *string) {
+    unsigned int i = 0;
+    while (string[i] != '\0')
+        i++;
+    return i;
+}
 
 void memcpy(byte *dest, byte *src, unsigned int n) {
     // Mengcopy n bytes yang ditunjuk src ke dest

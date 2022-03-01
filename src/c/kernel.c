@@ -6,7 +6,7 @@
 
 #include "header/kernel.h"
 
-void readSector(char *buffer, int sector);
+
 
 int main() {
   char buf[128];

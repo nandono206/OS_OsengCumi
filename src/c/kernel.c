@@ -54,13 +54,17 @@ void readString(char *string){
       string[i + 2] = '\n';
       break;
     } else if (input == '\b') { // input adalah backspace
-        if (i > 1) {
+        if (i > 2) {
           interrupt(0x10, 0xe00 + '\b', 0, 0, 0);
           interrupt(0x10, 0xe00 + '\0', 0, 0, 0);
           interrupt(0x10, 0xe00 + '\b', 0, 0, 0);
           string[i] = '\0';
           i--;
-        }
+        } else {
+          i = 2;
+	  string[0] = '\r';
+	  string[1] = '\n';
+	}
     } else {
         string[i] = input;
 	ax += input;

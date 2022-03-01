@@ -5,17 +5,17 @@
 // TODO : Tambahkan implementasi kode C
 
 #include "header/kernel.h"
+#include "header/std_lib.h"
 
 int main() {
-  char buf[128];
+  char buf[512];
   clearScreen();
   makeInterrupt21();
-
   printString("Halo dunia!\r\n");
-  readString(buf);
-  printString(buf);
-
-  while (true);
+  while(true) {
+    readString(buf);
+    printString(buf);
+  }
 }
 
 void handleInterrupt21(int AX, int BX, int CX, int DX) {
@@ -29,45 +29,46 @@ void handleInterrupt21(int AX, int BX, int CX, int DX) {
     default:
       printString("Invalid interrupt");
   }
-
 }
 
 void printString(char *string) {
-  int count;
-  while (*(string + count) != '\0') {
-    char ah = *(string + count);
-    char al = 0xe;
-    int ax = al * 256 + ah;
-
-    interrupt(0x10, ax, 0, 0, 0);
-    count++;
+  int i = 0;
+  while (string[i] != '\0') {
+    interrupt(0x10, 0xe00 + string[i], 0, 0, 0);
+    i++;
   }
+  interrupt(0x10, 0xe00 + '\n', 0, 0, 0);
+  interrupt(0x10, 0xe00 + '\r', 0, 0, 0);
 }
 
-void readString(char *string) {
-  int idx = 0;
-  char input_char = 0;
-  while (input_char != '\r') { // selama input bukan enter
-    input_char = interrupt(0x16, 0, 0, 0, 0);
-    if (input_char == '\r') {
-      string[idx] = '\0'; // akhiri dengan null
-    } else if (input_char == '\b') { // input adalah backspace
-        interrupt(0x10, 0xE00 + '\b', 0, 0, 0);
-				interrupt(0x10, 0xE00 + '\0', 0, 0, 0);
-				interrupt(0x10, 0xE00 + '\b', 0, 0, 0);
-        if (idx > 0) {
-          string[idx] = '\0';
-          idx --;
+void readString(char *string){
+  int i = 2;
+  int ax = 0xe << 8;
+  string[0] = '\r'; // enter
+  string[1] = '\n'; // newline
+  while(true) {
+    char input = interrupt(0x16, 0x0, 0, 0, 0);
+    if(input == '\r'){ // input adalah enter
+      string[i] = '\0'; // endstring
+      string[i + 1] = '\r';
+      string[i + 2] = '\n';
+      break;
+    } else if (input == '\b') { // input adalah backspace
+        if (i > 1) {
+          interrupt(0x10, 0xe00 + '\b', 0, 0, 0);
+          interrupt(0x10, 0xe00 + '\0', 0, 0, 0);
+          interrupt(0x10, 0xe00 + '\b', 0, 0, 0);
+          string[i] = '\0';
+          i--;
         }
     } else {
-      string[idx] = input_char;
-      idx ++;
-      interrupt(0x10, 0xE00 + input_char, 0, 0, 0);
+        string[i] = input;
+	ax += input;
+	interrupt(0x10, ax, 0x11, 0, 0);
+	ax -= input;
+	i++;
     }
   }
-  // perpindahan line
-  interrupt(0x10, 0xE00 + '\n', 0, 0, 0); 
-	interrupt(0x10, 0xE00 + '\r', 0, 0, 0);
 }
 
 void clearScreen() {

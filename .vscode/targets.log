@@ -8,7 +8,7 @@ make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --quest
 # This program built for i386-pc-mingw32
  
 
-# Make data base, printed on Mon Feb 28 20:42:00 2022
+# Make data base, printed on Fri Apr 01 23:12:27 2022
 
 # Variables
 
@@ -22,6 +22,8 @@ MAKEFLAGS = Rrqp
 VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+# environment
+PLATFORMIO_IDE = 2.4.3
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
@@ -59,16 +61,15 @@ PROGRAMW6432 = C:\Program Files
 # environment
 PROGRAMDATA = C:\ProgramData
 # environment
-VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-2e39d007-c9a7-4605-9d89-d83633613029-sock
+VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-923fb929-6c08-420f-9fe1-56f522617043-sock
 # environment
 VSCODE_CWD = C:\Users\Argakoesoemah\AppData\Local\Programs\Microsoft VS Code
 # environment
-PATH = C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Eclipse Foundation\jdk-11.0.12.7-hotspot\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\MinGW\bin;C:\Program Files\Java\jdk-17;C:\Program Files (x86)\GnuWin32\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\PostgreSQL\14\bin;%MAVEN_HOME%\bin;C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\;C:\Users\Argakoesoemah\AppData\Local\Microsoft\WindowsApps;C:\Users\Argakoesoemah\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Argakoesoemah\AppData\Roaming\npm;C:\Development\flutter\bin;C:\Development\flutter\bin\cache\dart-sdk\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin\;C:\Program Files\MariaDB 10.6\bin;C:\Users\Argakoesoemah\AppData\Local\JetBrains\IntelliJ IDEA Community Edition 2021.3.2\bin;;
+NO_PROXY = 127.0.0.1
 # environment
 ONLINESERVICES = Online Services
 # environment
-COMMON 
-PROGRAMW6432 = C:\Program Files\Common Files
+COMMONPROGRAMW6432 = C:\Program Files\Common Files
 # environment
 ZES_ENABLE_SYSMAN = 1
 # environment
@@ -90,7 +91,7 @@ ELECTRON_RUN_AS_NODE = 1
 # automatic
 %F = $(notdir $%)
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_11824_OQLYTZTMOWQDPYJG
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_13172_AFQNQWJTOYYNASMY
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
@@ -106,9 +107,9 @@ USERNAME = Argakoesoemah
 # environment
 PUBLIC = C:\Users\Public
 # environment
-VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-VSCODE_CODE_CACHE_PATH = C:\Users\Argakoesoemah\AppData\Roaming\Code\CachedData\f80445acd5a3dadef24aa209168452a3d97cc326
+VSCODE_CODE_CACHE_PATH = C:\Users\Argakoesoemah\AppData\Roaming\Code\CachedData\e18005f0f1b33c29e81d732535d8c0e47cafb0b5
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
@@ -120,11 +121,15 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
 USERDOMAIN = LAPTOP-5P9LFIRM
 # environment
+PLATFORMIO_PATH = C:\Users\Argakoesoemah\.platformio\python3;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Eclipse Foundation\jdk-11.0.12.7-hotspot\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\mingw64\bin;C:\Program Files\Java\jdk-17;C:\Program Files (x86)\GnuWin32\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\Argakoesoemah\apache-maven-3.8.4\bin;C:\Program Files\dotnet\;C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\;C:\Users\Argakoesoemah\AppData\Local\Microsoft\WindowsApps;C:\Users\Argakoesoemah\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Argakoesoemah\AppData\Roaming\npm;C:\Development\flutter\bin;C:\Development\flutter\bin\cache\dart-sdk\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin\;C:\Program Files\MariaDB 10.6\bin;C:\Users\Argakoesoemah\AppData\Local\JetBrains\IntelliJ IDEA Community Edition 2021.3.2\bin;;C:\Users\Argakoesoemah\.dotnet\tools;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Eclipse Foundation\jdk-11.0.12.7-hotspot\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\mingw64\bin;C:\Program Files\Java\jdk-17;C:\Program Files (x86)\GnuWin32\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\Argakoesoemah\apache-maven-3.8.4\bin;C:\Program Files\dotnet\;C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\;C:\Users\Argakoesoemah\AppData\Local\Microsoft\WindowsApps;C:\Users\Argakoesoemah\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Argakoesoemah\AppData\Roaming\npm;C:\Development\flutter\bin;C:\Development\flutter\bin\cache\dart-sdk\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin\;C:\Program Files\MariaDB 10.6\bin;C:\Users\Argakoesoemah\AppData\Local\JetBrains\IntelliJ IDEA Community Edition 2021.3.2\bin;;C:\Users\Argakoesoemah\.dotnet\tools
+# environment
 INTELLIJ IDEA COMMUNITY EDITION = C:\Users\Argakoesoemah\AppData\Local\JetBrains\IntelliJ IDEA Community Edition 2021.3.2\bin;
 # default
 MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
+# environment
+PATH = C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Eclipse Foundation\jdk-11.0.12.7-hotspot\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\mingw64\bin;C:\Program Files\Java\jdk-17;C:\Program Files (x86)\GnuWin32\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\Argakoesoemah\apache-maven-3.8.4\bin;C:\Program Files\dotnet\;C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\;C:\Users\Argakoesoemah\AppData\Local\Microsoft\WindowsApps;C:\Users\Argakoesoemah\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Argakoesoemah\AppData\Roaming\npm;C:\Development\flutter\bin;C:\Development\flutter\bin\cache\dart-sdk\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin\;C:\Program Files\MariaDB 10.6\bin;C:\Users\Argakoesoemah\AppData\Local\JetBrains\IntelliJ IDEA Community Edition 2021.3.2\bin;;C:\Users\Argakoesoemah\.dotnet\tools
 # environment
 MYSQL_HOME = C:\Program Files\MariaDB 10.6\bin
 # environment
@@ -154,7 +159,7 @@ PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 140 Stepping 1, GenuineIntel
 # environment
 OS = Windows_NT
 # environment
-VSCODE_IPC_HOOK = \\.\pipe\4cafe7f17b750288eae333f07c7c369d-1.64.2-main-sock
+VSCODE_IPC_HOOK = \\.\pipe\4cafe7f17b750288eae333f07c7c369d-1.66.0-main-sock
 # environment
 HOMEPATH = \Users\Argakoesoemah
 # environment
@@ -186,6 +191,8 @@ MAKEFILES :=
 # automatic
 <F = $(notdir $<)
 # environment
+PLATFORMIO_CALLER = vscode
+# environment
 LC_ALL = C
 # automatic
 ^F = $(notdir $^)
@@ -206,11 +213,11 @@ PROCESSOR_LEVEL = 6
 # environment
 FPS_BROWSER_APP_PROFILE_STRING = Internet Explorer
 # environment
-VSCODE_PID = 11824
+VSCODE_PID = 13172
 # environment
 USERDOMAIN_ROAMINGPROFILE = LAPTOP-5P9LFIRM
 # variable set hash-table stats:
-# Load=98/1024=10%, Rehash=0, Collisions=9/120=8%
+# Load=102/1024=10%, Rehash=0, Collisions=12/124=10%
 
 # Pattern-specific Variable Values
 
@@ -222,32 +229,36 @@ USERDOMAIN_ROAMINGPROFILE = LAPTOP-5P9LFIRM
 # C:\Program Files\Common Files\Oracle\Java\javapath (key C:/Program Files/Common Files/Oracle/Java/javapath, mtime 1632891655): 6 files, no impossibilities.
 # C:\Development\flutter\bin\cache\dart-sdk\bin (key C:/Development/flutter/bin/cache/dart-sdk/bin, mtime 1633044852): 15 files, no impossibilities.
 # C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\ (key C:/Users/Argakoesoemah/AppData/Local/Programs/Python/Python39/, mtime 1645965664): 20 files, no impossibilities.
-# C:\Users\Argakoesoemah\AppData\Local\Microsoft\WindowsApps (key C:/Users/Argakoesoemah/AppData/Local/Microsoft/WindowsApps, mtime 1646055150): 32 files, no impossibilities.
+# C:\Users\Argakoesoemah\AppData\Local\Microsoft\WindowsApps (key C:/Users/Argakoesoemah/AppData/Local/Microsoft/WindowsApps, mtime 1648798229): 32 files, no impossibilities.
 # C:\WINDOWS\System32\WindowsPowerShell\v1.0\ (key C:/WINDOWS/System32/WindowsPowerShell/v1.0/, mtime 1622898672): 30 files, no impossibilities.
 # C:\Users\Argakoesoemah\AppData\Local\JetBrains\IntelliJ IDEA Community Edition 2021.3.2\bin (key C:/Users/Argakoesoemah/AppData/Local/JetBrains/IntelliJ IDEA Community Edition 2021.3.2/bin, mtime 1643801602): 32 files, no impossibilities.
 # C:\WINDOWS\System32\Wbem (key C:/WINDOWS/System32/Wbem, mtime 1642183616): 155 files, no impossibilities.
-# . (key c:/tugas-besar-os-osengcumi, mtime 1645787576): 8 files, no impossibilities.
+# . (key c:/tugas-besar-os-osengcumi, mtime 1646148500): 8 files, no impossibilities.
 # C:\Development\flutter\bin (key C:/Development/flutter/bin, mtime 1633044841): 9 files, no impossibilities.
 # C:\Program Files\MariaDB 10.6\bin (key C:/Program Files/MariaDB 10.6/bin, mtime 1643644747): 58 files, no impossibilities.
 # C:\Users\Argakoesoemah\AppData\Local\Programs\Python\Python39\Scripts\ (key C:/Users/Argakoesoemah/AppData/Local/Programs/Python/Python39/Scripts/, mtime 1645965666): 60 files, no impossibilities.
 # C:\Program Files\MySQL\MySQL Server 8.0\bin: could not be stat'd.
 # C:\ProgramData\chocolatey\bin (key C:/ProgramData/chocolatey/bin, mtime 1628424690): 13 files, no impossibilities.
 # C:\Program Files\nodejs\ (key C:/Program Files/nodejs/, mtime 1628424645): 11 files, no impossibilities.
-# C:\MinGW\bin (key C:/MinGW/bin, mtime 1629818275): 59 files, no impossibilities.
 # C:\WINDOWS\System32\OpenSSH\: could not be stat'd.
-# C:\WINDOWS (key C:/WINDOWS, mtime 1644663990): 121 files, no impossibilities.
-# C:\Program Files\Eclipse Foundation\jdk-11.0.12.7-hotspot\bin (key C:/Program Files/Eclipse Foundation/jdk-11.0.12.7-hotspot/bin, mtime 1631871285): 127 files, no impossibilities.
+# C:\Users\Argakoesoemah\apache-maven-3.8.4\bin (key C:/Users/Argakoesoemah/apache-maven-3.8.4/bin, mtime 1636855968): 8 files, no impossibilities.
+# C:\mingw64\bin (key C:/mingw64/bin, mtime 1644478421): 83 files, no impossibilities.
+# C:\WINDOWS (key C:/WINDOWS, mtime 1647321315): 121 files, no impossibilities.
+# C:\Program Files\Eclipse Foundation\jdk-11.0.12.7-hotspot\bin (key C:/P 
+rogram Files/Eclipse Foundation/jdk-11.0.12.7-hotspot/bin, mtime 1631871285): 127 files, no impossibilities.
+# C:\Program Files\dotnet\ (key C:/Program Files/dotnet/, mtime 1647621662): 12 files, no impossibilities.
 # C:\Program Files\PostgreSQL\14\bin (key C:/Program Files/PostgreSQL/14/bin, mtime 1640185199): 71 files, no impossibilities.
 # C:\Program Files\MySQL\MySQL Server 8.0\bin\: could not be stat'd.
-# C:\Users\Argakoesoemah\AppData\Local\Programs\Microsoft VS Code\bin (key C:/Users/Argakoesoemah/AppData/Local/Programs/Microsoft VS Code/bin, mtime 1644552162): 4 files, no impossibilities.
+# C:\Users\Argakoesoemah\AppData\Local\Programs\Microsoft VS Code\bin (key C:/Users/Argakoesoemah/AppData/Local/Programs/Microsoft VS Code/bin, mtime 1648709820): 4 files, no impossibilities.
 # C:\Program Files\Git\cmd (key C:/Program Files/Git/cmd, mtime 1628421879): 8 files, no impossibilities.
-# C:\WINDOWS\system32 (key C:/WINDOWS/system32, mtime 1645605871): 2860 files, no impossibilities.
+# C:\WINDOWS\system32 (key C:/WINDOWS/system32, mtime 1647621822): 2890 files, no impossibilities.
 # C:\Program Files\Java\jdk-17 (key C:/Program Files/Java/jdk-17, mtime 1632891655): 10 files, no impossibilities.
-# C:\Users\Argakoesoemah\AppData\Roaming\npm (key C:/Users/Argakoesoemah/AppData/Roaming/npm, mtime 1628563682): 6 files, no impossibilities.
-# %MAVEN_HOME%\bin: could not be stat'd.
+# C:\Users\Argakoesoemah\AppData\Roaming\npm (key C:/Users/Argakoesoemah/AppData/Roaming/npm, mtime  
+1628563682): 6 files, no impossibilities.
+# C:\Users\Argakoesoemah\.dotnet\tools: could not be stat'd.
 # C:\Program Files (x86)\GnuWin32\bin (key C:/Program Files (x86)/GnuWin32/bin, mtime 1635093921): 5 files, no impossibilities.
 
-# 3720 files, no impossibilities in 28 directories.
+# 3794 files, no impossibilities in 30 directories.
 
 # Implicit Rules
 
@@ -265,7 +276,8 @@ bootloader:
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `makefile', line 9):
-	# TODO : Tambahkan untuk pembuatan bootloader
+	nasm src/asm/bootloader.asm -o out/bootloader
+	dd if=out/bootloader of=out/system.img bs=512 count=1 conv=notrunc
 	
 
 all: diskimage bootloader stdlib kernel
@@ -281,8 +293,8 @@ stdlib:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 15):
-	# Opsional
+#  commands to execute (from `makefile', line 19):
+	bcc -ansi -c -o out/std_lib.o src/c/std_lib.c
 	
 
 # Not a target:
@@ -295,14 +307,18 @@ kernel:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 12):
-	# TODO : Tambahkan untuk pembuatan kernel
+#  commands to execute (from `makefile', line  
+13):
+	bcc -ansi -c -o out/kernel.o src/c/kernel.c
+	nasm -f as86 src/asm/kernel.asm -o out/kernel_asm.o
+	ld86 -o out/kernel -d out/kernel.o out/kernel_asm.o
+	dd if=out/kernel of=out/system.img bs=512 conv=notrunc seek=1
 	
 
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-25 18:12:21
+#  Last modified 2022-03-01 22:28:20
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -318,7 +334,7 @@ run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 18):
+#  commands to execute (from `makefile', line 22):
 	bochs -f src/config/if2230.config
 	
 
@@ -347,7 +363,7 @@ diskimage:
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/10=10%
 #  commands to execute (from `makefile', line 6):
-	# TODO : Tambahkan untuk pembuatan image
+	dd if=/dev/zero of=out/system.img bs=512 count=2880
 	
 
 # files hash-table stats:
@@ -363,6 +379,6 @@ diskimage:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Mon Feb 28 20:42:00 2022
+# Finished Make data base on Fri Apr 01 23:12:27 2022
 
  

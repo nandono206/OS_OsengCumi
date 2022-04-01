@@ -10,8 +10,15 @@ extern void makeInterrupt21();
 
 void handleInterrupt21(int AX, int BX, int CX, int DX);
 
-
 // Implementasikan
 void printString(char *string);
 void readString(char *string);
 void clearScreen();
+
+void writeSector(byte *buffer, int sector_number);
+void readSector(byte *buffer, int sector_number);
+
+void write(struct file_metadata *metadata, enum fs_retcode *return_code);
+void read(struct file_metadata *metadata, enum fs_retcode *return_code);
+
+void shell();

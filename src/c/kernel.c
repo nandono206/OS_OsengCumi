@@ -7,12 +7,14 @@
 #include "header/kernel.h"
 #include "header/std_lib.h"
 #include "header/filesystem.h"
+#include "header/std_type.h"
 
 int main() {
   char buf[512];
   clearScreen();
   makeInterrupt21();
   printString("Halo dunia!\r\n");
+  shell();
   while(true) {
     readString(buf);
     printString(buf);
@@ -32,14 +34,38 @@ void handleInterrupt21(int AX, int BX, int CX, int DX) {
   }
 }
 
+void shell() {
+  char input_buf[64];
+  char path_str[128];
+  byte current_dir = FS_NODE_P_IDX_ROOT;
+
+  while (true) {
+    printString("OS@IF2230:");
+    //printCWD(path_str, current_dir);
+    printString("$");
+    readString(input_buf);
+   
+    // if (strcmp(input_buf, "cd")) {
+    //   // Utility cd
+    // }
+    // else 
+    //   printString("Unknown command\r\n");
+    printString("\n");
+ 
+  }
+}
+
 void printString(char *string) {
   int i = 0;
   while (string[i] != '\0') {
     interrupt(0x10, 0xe00 + string[i], 0, 0, 0);
+    if (string[i] == '\n') {
+        interrupt(0x10, 0xe00+0xd, 0x000F, 0, 0);
+    }
     i++;
   }
-  interrupt(0x10, 0xe00 + '\n', 0, 0, 0);
-  interrupt(0x10, 0xe00 + '\r', 0, 0, 0);
+  // interrupt(0x10, 0xe00 + '\n', 0, 0, 0);
+  // interrupt(0x10, 0xe00 + '\r', 0, 0, 0);
 }
 
 void readString(char *string){
@@ -125,6 +151,35 @@ void writeSector(byte *buffer, int sector_number) {
         head | drive                // DX
     );
 }
+
+void fillMap() {
+  struct map_filesystem map_fs_buffer;
+  int i;
+
+  // Load filesystem map
+  readSector(&map_fs_buffer, FS_MAP_SECTOR_NUMBER);
+
+  /* 
+    Edit filesystem map disini 
+                             */
+  for (i=0; i<16; i++){
+    if (i>=0 && i < 16){
+      map_fs_buffer.is_filled[i] = true;
+    }
+    else if (i>255 && i<512){
+      map_fs_buffer.is_filled[i] = true;
+    }
+    else{
+      map_fs_buffer.is_filled[i] = false;
+    }
+    
+  }
+  
+
+  // Update filesystem map
+  writeSector(&map_fs_buffer, FS_MAP_SECTOR_NUMBER); 
+}
+
 
 void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   struct node_filesystem   node_fs_buffer;
@@ -218,3 +273,6 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
   //    menggunakan writeSector() pada sektor yang sesuai
   // 9. Kembalikan retcode FS_SUCCESS
 }
+
+
+

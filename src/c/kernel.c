@@ -127,32 +127,101 @@ void writeSector(byte *buffer, int sector_number) {
 }
 
 void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
-  struct node_filesystem   node_fs_buffer;
-  struct sector_filesystem sector_fs_buffer;
   // Tambahkan tipe data yang dibutuhkan
+  struct node_filesystem   node_fs_buffer; // 1024 byte
+  struct node_entry        node_buffer;
+  struct sector_filesystem sector_fs_buffer; // 512 byte
+  struct sector_entry      sector_entry_buffer;
+  struct sector_filesystem sector_fs_buffer2;
+  
 
   // Masukkan filesystem dari storage ke memori buffer
+  // Asumsikan semua buffer filesystem diatas telah terinisiasi dengan baik
+
+  // Pembacaan storage ke buffer
+  readSector(sector_fs_buffer.sector_list, FS_SECTOR_SECTOR_NUMBER);
+  // readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
+  // readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
 
   // 1. Cari node dengan nama dan lokasi yang sama pada filesystem.
   //    Jika ditemukan node yang cocok, lanjutkan ke langkah ke-2.
   //    Jika tidak ditemukan kecocokan, tuliskan retcode FS_R_NODE_NOT_FOUND
   //    dan keluar.  
 
+  bool found = false;
+  int i = 0;
+  bool nameMatch;
+  byte S;
+
+  while (!found && i < 64) {
+    for (i = 0; i < 64; i ++) {
+      if (i >= 32) {
+        readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER + 1);
+      } else {
+        readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER);
+      }
+      if (node_fs_buffer.nodes[i].parent_node_index == (*metadata).parent_index) {
+        if (node_fs_buffer.nodes[i].name[0] != 0x0) {
+          nameMatch = true;
+          int j = 0;
+          while (nameMatch && j < 14) {
+            if ((*metadata).node_name[j] != node_fs_buffer.nodes[i].name[j]) {
+              nameMatch = false;
+            } else if (node_fs_buffer.nodes[i].name[j] == '\0' && (*metadata).node_name[j] == '\0') {
+              break;
+            }
+          }
+          if (nameMatch) {
+            S = node_fs_buffer.nodes[i].sector_entry_index;
+            found = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if (!found) {
+    *return_code = FS_R_NODE_NOT_FOUND;
+  }
+
   // 2. Cek tipe node yang ditemukan
   //    Jika tipe node adalah file, lakukan proses pembacaan.
   //    Jika tipe node adalah folder, tuliskan retcode FS_R_TYPE_IS_FOLDER
   //    dan keluar.
 
-  // Pembacaan
-  // 1. memcpy() entry sector sesuai dengan byte S
-  // 2. Lakukan iterasi proses berikut, i = 0..15
-  // 3. Baca byte entry sector untuk mendapatkan sector number partisi file
-  // 4. Jika byte bernilai 0, selesaikan iterasi
-  // 5. Jika byte valid, lakukan readSector() 
-  //    dan masukkan kedalam buffer yang disediakan pada metadata
-  // 6. Lompat ke iterasi selanjutnya hingga iterasi selesai
-  // 7. Tulis retcode FS_SUCCESS dan ganti filesize 
-        //pada akhir proses pembacaan.
+  if (S == 0xFF) {
+    *return_code = FS_R_TYPE_IS_FOLDER;
+  } else {
+      // Pembacaan
+      // 1. memcpy() entry sector sesuai dengan byte S
+      // 2. Lakukan iterasi proses berikut, i = 0..15
+      // 3. Baca byte entry sector untuk mendapatkan sector number partisi file
+      // 4. Jika byte bernilai 0, selesaikan iterasi
+      // 5. Jika byte valid, lakukan readSector() 
+      //    dan masukkan kedalam buffer yang disediakan pada metadata
+      // 6. Lompat ke iterasi selanjutnya hingga iterasi selesai
+      // 7. Tulis retcode FS_SUCCESS dan ganti filesize 
+            //pada akhir proses pembacaan.
+      memcpy(&node_buffer, &(node_fs_buffer.nodes[S]), sizeof(struct node_entry));
+      memcpy(
+            &sector_entry_buffer,
+            &(sector_fs_buffer.sector_list[S]),
+            sizeof(struct sector_entry)
+      );
+      int counter = 0;
+      byte temp;
+      while (counter < 16) {
+        if (sector_entry_buffer.sector_numbers[counter] == '0') {
+          break;
+        }
+        readSector(temp, sector_entry_buffer.sector_numbers[counter]);
+        (*metadata).buffer[counter] = temp;
+        counter ++;
+      }
+      (*metadata).filesize = counter --;
+      *return_code = FS_SUCCESS;
+  }
 }
 
 void write(struct file_metadata *metadata, enum fs_retcode *return_code) {

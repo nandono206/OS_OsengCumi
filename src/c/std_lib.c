@@ -2,19 +2,13 @@
 
 // Opsional : Tambahkan implementasi kode C
 
-
-int mod(int a, int n) {
-    return a - n*(a/n);
-}
 int div(int a, int b){
     return a/b;
 }
 
-unsigned int strlen(char *string) {
-    int i = 0;
-    while (string[i] != '\0')
-        i++;
-    return i;
+
+int mod(int a, int n) {
+    return a - n*(a/n);
 }
 
 void memcpy(byte *dest, byte *src, unsigned int n) {
@@ -24,6 +18,13 @@ void memcpy(byte *dest, byte *src, unsigned int n) {
         dest[i] = src[i];
         i ++;
     }
+}
+
+unsigned int strlen(char *string) {
+    int i = 0;
+    while (string[i] != '\0')
+        i++;
+    return i;
 }
 
 void strcpy(char *dst, char *src) {

@@ -216,9 +216,10 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   //    dan keluar.  
 
   bool found = false;
-  int i = 0;
   bool nameMatch;
-  byte S;
+  int i = 0;
+  int S, j;
+  byte temp;
 
   while (!found && i < 64) {
     for (i = 0; i < 64; i ++) {
@@ -230,7 +231,7 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
       if (node_fs_buffer.nodes[i].parent_node_index == (*metadata).parent_index) {
         if (node_fs_buffer.nodes[i].name[0] != 0x0) {
           nameMatch = true;
-          int j = 0;
+          j = 0;
           while (nameMatch && j < 14) {
             if ((*metadata).node_name[j] != node_fs_buffer.nodes[i].name[j]) {
               nameMatch = false;
@@ -277,7 +278,6 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
             sizeof(struct sector_entry)
       );
       int counter = 0;
-      byte temp;
       while (counter < 16) {
         if (sector_entry_buffer.sector_numbers[counter] == '0') {
           break;
@@ -298,6 +298,7 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
   // Tambahkan tipe data yang dibutuhkan
 
   // Masukkan filesystem dari storage ke memori
+
 
   // 1. Cari node dengan nama dan lokasi parent yang sama pada node.
   //    Jika tidak ditemukan kecocokan, lakukan proses ke-2.

@@ -1,3 +1,5 @@
+
+
 #include "std_type.h"
 
 // Operator matematika umum

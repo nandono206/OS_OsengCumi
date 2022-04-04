@@ -12,6 +12,7 @@
 int main() {
   char buf[512];
   clearScreen();
+  fillMap();
   makeInterrupt21();
   printString("Halo dunia!\r\n");
   shell();
@@ -205,6 +206,7 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   bool nameMatch;
   int i = 0;
   int S, j;
+  int counter = 0;
   byte temp;
 
   // Masukkan filesystem dari storage ke memori buffer
@@ -276,7 +278,7 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
             &(sector_fs_buffer.sector_list[S]),
             sizeof(struct sector_entry)
       );
-      int counter = 0;
+     
       while (counter < 16) {
         if (sector_entry_buffer.sector_numbers[counter] == '0') {
           break;

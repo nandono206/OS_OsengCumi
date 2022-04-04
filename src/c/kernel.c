@@ -201,6 +201,11 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   struct sector_entry      sector_entry_buffer;
   struct sector_filesystem sector_fs_buffer2;
   
+  bool found = false;
+  bool nameMatch;
+  int i = 0;
+  int S, j;
+  byte temp;
 
   // Masukkan filesystem dari storage ke memori buffer
   // Asumsikan semua buffer filesystem diatas telah terinisiasi dengan baik
@@ -214,12 +219,6 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   //    Jika ditemukan node yang cocok, lanjutkan ke langkah ke-2.
   //    Jika tidak ditemukan kecocokan, tuliskan retcode FS_R_NODE_NOT_FOUND
   //    dan keluar.  
-
-  bool found = false;
-  bool nameMatch;
-  int i = 0;
-  int S, j;
-  byte temp;
 
   while (!found && i < 64) {
     for (i = 0; i < 64; i ++) {

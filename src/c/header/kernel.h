@@ -21,11 +21,15 @@ void readSector(byte *buffer, int sector_number);
 void fillMap();
 void printCWD(char *path_str, byte curr_dir);
 void ls(byte curr_dir);
+void mkdir(char *name, byte cwd);
 
 void write(struct file_metadata *metadata, enum fs_retcode *return_code);
 void read(struct file_metadata *metadata, enum fs_retcode *return_code);
 
 void shell();
+<<<<<<< HEAD
 
 void cat(char *name, byte cwd);
 void splitCommand(char *buffer, char *first, char *second, char delimiter);
+=======
+>>>>>>> 76707cfb041488906213b06f14e771c73eb7198a

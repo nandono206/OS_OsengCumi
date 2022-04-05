@@ -80,6 +80,7 @@ void shell() {
     // else 
     //   printString("Unknown command\r\n");
     printString("\n");
+    //ls(current_dir);
  
   }
 }
@@ -239,9 +240,7 @@ void fillMap() {
     else if (i>255 && i<512){
       map_fs_buffer.is_filled[i] = true;
     }
-    else{
-      map_fs_buffer.is_filled[i] = false;
-    }
+    
     
   }
   
@@ -355,19 +354,70 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
   struct sector_filesystem sector_fs_buffer;
   struct map_filesystem    map_fs_buffer;
   // Tambahkan tipe data yang dibutuhkan
+  bool found = false;
+  bool nameMatch;
+  int i = 0;
+  int S, j;
+  int counter = 0;
+  byte temp;
+  int nodeLine = 0;
 
   // Masukkan filesystem dari storage ke memori
-
+  readSector(map_fs_buffer.is_filled, FS_MAP_SECTOR_NUMBER);
+  readSector(node_fs_buffer.nodes, FS_NODE_SECTOR_NUMBER);
+  readSector(sector_fs_buffer.sector_list, FS_SECTOR_SECTOR_NUMBER);
 
   // 1. Cari node dengan nama dan lokasi parent yang sama pada node.
   //    Jika tidak ditemukan kecocokan, lakukan proses ke-2.
   //    Jika ditemukan node yang cocok, tuliskan retcode 
   //    FS_W_FILE_ALREADY_EXIST dan keluar. 
- 
+  while (!found && i < 64) {
+    for (i = 0; i < 64; i ++) {
+      if (i >= 32) {
+        readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER + 1);
+      } else {
+        readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER);
+      }
+      if (node_fs_buffer.nodes[i].parent_node_index == (*metadata).parent_index) {
+        if (node_fs_buffer.nodes[i].name[0] != 0x0) {
+          nameMatch = true;
+          j = 0;
+          while (nameMatch && j < 14) {
+            if ((*metadata).node_name[j] != node_fs_buffer.nodes[i].name[j]) {
+              nameMatch = false;
+            } else if (node_fs_buffer.nodes[i].name[j] == '\0' && (*metadata).node_name[j] == '\0') {
+              break;
+            }
+          }
+          if (nameMatch) {
+            S = node_fs_buffer.nodes[i].sector_entry_index;
+            found = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if (found) {
+    *return_code = FS_W_FILE_ALREADY_EXIST;
+    return;
+  }
+
   // 2. Cari entri kosong pada filesystem node dan simpan indeks.
   //    Jika ada entry kosong, simpan indeks untuk penulisan.
   //    Jika tidak ada entry kosong, tuliskan FS_W_MAXIMUM_NODE_ENTRY
   //    dan keluar.
+  for (nodeLine = 0; nodeLine < 64; nodeLine++) {
+    if (node_fs_buffer.nodes[nodeLine] == 0x00) {
+      emptyFound = true;
+      break;
+    }
+  }
+  if (!emptyFound) {
+    *return_code = FS_W_MAXIMUM_NODE_ENTRY;
+    return;
+  }
 
   // 3. Cek dan pastikan entry node pada indeks P adalah folder.
   //    Jika pada indeks tersebut adalah file atau entri kosong,
@@ -416,50 +466,63 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
 }
 
 void printCWD(char *path_str, byte curr_dir){
-    char folderOrder[32];
-    char stringToShow[256];
-    byte dir[1024];
-    int i;
-    int fileNameIdx;
-    int current;
+    byte directories[1024];
+    char folderList[32];
+    char outputString[256];
+    int i, indexes, counter;
+    
 
     printString("~/");
-    current = 0;
-
+    counter = 0;
     //jika bukan  di root
     if (curr_dir != 0xFF) 
     {
-        readSector(dir, FS_NODE_SECTOR_NUMBER);
-        readSector(dir + 512, FS_MAP_SECTOR_NUMBER+1);
+        readSector(directories, FS_NODE_SECTOR_NUMBER);
+        readSector(directories + 512, FS_MAP_SECTOR_NUMBER+1);
         
         i = 0;
         while (curr_dir != 0xFF)
         {
-            folderOrder[i] = curr_dir;
-            curr_dir = dir[curr_dir * 16];
+            folderList[i] = curr_dir;
+            curr_dir = directories[curr_dir * 16];
             i++;
         }
         i--;
         while (i >= 0)
         {
-            fileNameIdx = 0;
-            while (dir[folderOrder[i] * 16 + 2 + fileNameIdx] != 0x00)
+            indexes = 0;
+            while (directories[folderList[i] * 16 + 2 + indexes] != 0x00)
             {
-                stringToShow[current] = dir[folderOrder[i] * 16 + 2 + fileNameIdx];
-                fileNameIdx++;
-                current++;
+                outputString[counter] = directories[folderList[i] * 16 + 2 + indexes];
+                indexes++;
+                counter++;
             }
             if (i > 0)
             {
-                stringToShow[current] = '/';
-                current++;
+                outputString[counter] = '/';
+                counter++;
             }
             i--;
         }
-        stringToShow[current] = 0x00;
-        printString(stringToShow);
+        outputString[counter] = 0x00;
+        printString(outputString);
     }
 }
 
+void ls(byte curr_dir){
+  byte all[1024];
+  int i;
 
+  readSector(all, FS_MAP_SECTOR_NUMBER);
+  readSector(all + 512, FS_NODE_SECTOR_NUMBER+1);
+
+  for(i = 0; i<64; i++){
+    if (curr_dir == all[i * 16]){
+      printString(all + i * 16 + 2);
+      printString("\r\n");
+    }
+  }
+
+
+}
 

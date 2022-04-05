@@ -45,3 +45,31 @@ void clear(byte *ptr, unsigned int n) {
         i ++;
     }
 }
+
+bool strcmp(char *s1, char *s2) {
+    // Mengembalikan true jika string sama
+    int i = 0;
+    bool flag = true;
+    while (flag) {
+      if (s1[i] != s2[i]) {
+        flag = false;
+      } else if (s1[i] == '\0' && s2[i] == '\0') {
+        break;
+      }
+      i ++;
+    }
+    return flag;
+}
+
+bool strCmpN(char *s1, char *s2, int N) {
+   int i = 0;
+   bool flag = true;
+   while (!(s1[i] == '\0' && s2[i] == '\0') && i < N && flag) {
+     if (s1[i] != s2[i]) {
+       flag = false;
+     }
+     i ++;
+   }
+   return flag;
+}
+

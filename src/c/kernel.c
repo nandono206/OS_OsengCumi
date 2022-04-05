@@ -47,6 +47,32 @@ void handleInterrupt21(int AX, int BX, int CX, int DX) {
     }
 }
 
+void shell() {
+  char input_buf[64];
+  char path_str[128];
+  //char fullCommand[10][20];
+  byte current_dir = FS_NODE_P_IDX_ROOT;
+  int res;
+
+  while (true) {
+    printString("OS@IF2230:");
+    printCWD(path_str, current_dir);
+    printString("$");
+    readString(input_buf);
+    
+    //res = parseCommand(input_buf, fullCommand)
+    
+   
+    // if (strcmp(input_buf, "cd")) {
+    //   // Utility cd
+    // }
+    // else 
+    //   printString("Unknown command\r\n");
+    printString("\n");
+ 
+  }
+}
+
 int parseCommand(char *command, char *arg) {
   bool flag = false;
   int i = 0;
@@ -86,26 +112,7 @@ int parseCommand(char *command, char *arg) {
   return div(j, 64) + 1;
 }
 
-void shell() {
-  char input_buf[64];
-  char path_str[128];
-  byte current_dir = FS_NODE_P_IDX_ROOT;
-
-  while (true) {
-    printString("OS@IF2230:");
-    printCWD(path_str, current_dir);
-    printString("$");
-    readString(input_buf);
-   
-    // if (strcmp(input_buf, "cd")) {
-    //   // Utility cd
-    // }
-    // else 
-    //   printString("Unknown command\r\n");
-    printString("\n");
- 
-  }
-}
+//int cat(
 
 void printString(char *string) {
   int i = 0;

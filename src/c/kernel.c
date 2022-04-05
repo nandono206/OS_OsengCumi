@@ -50,9 +50,11 @@ void handleInterrupt21(int AX, int BX, int CX, int DX) {
 void shell() {
   char input_buf[64];
   char path_str[128];
-  //char fullCommand[10][20];
+  char fullCommand[6][64];
   byte current_dir = FS_NODE_P_IDX_ROOT;
   int res;
+  struct file_metadata metadata;
+  enum fs_retcode return_code;
 
   while (true) {
     printString("OS@IF2230:");
@@ -60,12 +62,21 @@ void shell() {
     printString("$");
     readString(input_buf);
     
-    //res = parseCommand(input_buf, fullCommand)
+    res = parseCommand(input_buf, &fullCommand);
     
-   
-    // if (strcmp(input_buf, "cd")) {
-    //   // Utility cd
-    // }
+    if (res != -1) {
+	printString(" Valid!\r\n");
+    	if (strCmpN(fullCommand[0], "\r\ncat", 5)) {
+	       // Utility cat
+	       printString(" Berhasil!\r\n");
+	       //metadata.node_name = fullCommand[1];
+	       metadata.node_name = "file_luar";
+	       printString(fullCommand[0]);
+	       metadata.parent_index = 0xFF;
+	       read(&metadata, &return_code);
+	       printString(metadata.buffer);
+    	} // elif untuk command lainnya
+    }    
     // else 
     //   printString("Unknown command\r\n");
     printString("\n");
@@ -260,8 +271,8 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
 
   // Pembacaan storage ke buffer
   readSector(sector_fs_buffer.sector_list, FS_SECTOR_SECTOR_NUMBER);
-  // readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
-  // readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
+  readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
+  readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
 
   // 1. Cari node dengan nama dan lokasi yang sama pada filesystem.
   //    Jika ditemukan node yang cocok, lanjutkan ke langkah ke-2.
@@ -308,6 +319,7 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   if (S == 0xFF) {
     *return_code = FS_R_TYPE_IS_FOLDER;
   } else {
+  	
       // Pembacaan
       // 1. memcpy() entry sector sesuai dengan byte S
       // 2. Lakukan iterasi proses berikut, i = 0..15
@@ -329,7 +341,7 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
         if (sector_entry_buffer.sector_numbers[counter] == '0') {
           break;
         }
-        readSector(temp, sector_entry_buffer.sector_numbers[counter]);
+        readSector(&temp, sector_entry_buffer.sector_numbers[counter]);
         (*metadata).buffer[counter] = temp;
         counter ++;
       }

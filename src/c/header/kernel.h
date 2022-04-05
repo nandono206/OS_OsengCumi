@@ -22,6 +22,9 @@ void fillMap();
 void printCWD(char *path_str, byte curr_dir);
 void ls(byte curr_dir);
 void cd(byte parentIdx, char *targetName, byte *newParentIdx);
+void mkdir(char *name, byte cwd);
+void cat(char* name, byte curr_dir);
+void lsCommand(byte curr_dir);
 
 void write(struct file_metadata *metadata, enum fs_retcode *return_code);
 void read(struct file_metadata *metadata, enum fs_retcode *return_code);

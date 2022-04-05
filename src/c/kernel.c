@@ -404,48 +404,46 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
 }
 
 void printCWD(char *path_str, byte curr_dir){
-    char folderOrder[32];
-    char stringToShow[256];
-    byte dir[1024];
-    int i;
-    int fileNameIdx;
-    int current;
+    byte directories[1024];
+    char folderList[32];
+    char outputString[256];
+    int i, indexes, counter;
+    
 
     printString("~/");
-    current = 0;
-
+    counter = 0;
     //jika bukan  di root
     if (curr_dir != 0xFF) 
     {
-        readSector(dir, FS_NODE_SECTOR_NUMBER);
-        readSector(dir + 512, FS_MAP_SECTOR_NUMBER+1);
+        readSector(directories, FS_NODE_SECTOR_NUMBER);
+        readSector(directories + 512, FS_MAP_SECTOR_NUMBER+1);
         
         i = 0;
         while (curr_dir != 0xFF)
         {
-            folderOrder[i] = curr_dir;
-            curr_dir = dir[curr_dir * 16];
+            folderList[i] = curr_dir;
+            curr_dir = directories[curr_dir * 16];
             i++;
         }
         i--;
         while (i >= 0)
         {
-            fileNameIdx = 0;
-            while (dir[folderOrder[i] * 16 + 2 + fileNameIdx] != 0x00)
+            indexes = 0;
+            while (directories[folderList[i] * 16 + 2 + indexes] != 0x00)
             {
-                stringToShow[current] = dir[folderOrder[i] * 16 + 2 + fileNameIdx];
-                fileNameIdx++;
-                current++;
+                outputString[counter] = directories[folderList[i] * 16 + 2 + indexes];
+                indexes++;
+                counter++;
             }
             if (i > 0)
             {
-                stringToShow[current] = '/';
-                current++;
+                outputString[counter] = '/';
+                counter++;
             }
             i--;
         }
-        stringToShow[current] = 0x00;
-        printString(stringToShow);
+        outputString[counter] = 0x00;
+        printString(outputString);
     }
 }
 

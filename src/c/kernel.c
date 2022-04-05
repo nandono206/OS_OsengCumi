@@ -49,8 +49,10 @@ void handleInterrupt21(int AX, int BX, int CX, int DX) {
 
 void shell() {
   char input_buf[64];
+  char command[64];
+  char args[64];
   char path_str[128];
-  char fullCommand[6][64];
+  char fullCommand[10][64];
   byte current_dir = FS_NODE_P_IDX_ROOT;
   int res;
   struct file_metadata metadata;
@@ -62,21 +64,26 @@ void shell() {
     printString("$");
     readString(input_buf);
     
-    res = parseCommand(input_buf, &fullCommand);
+    splitCommand(input_buf, command, args, ' ');
+    printString(command);
+    printString("\n");
+    printString(args);
     
-    if (res != -1) {
+    /*if (res != -1) {
 	printString(" Valid!\r\n");
     	if (strCmpN(fullCommand[0], "\r\ncat", 5)) {
-	       // Utility cat
+	       // Utility cd
 	       printString(" Berhasil!\r\n");
+	       cat("file_luar", current_dir);
+	       */
 	       //metadata.node_name = fullCommand[1];
-	       metadata.node_name = "file_luar";
+	       /* metadata.node_name = "file_luar\0";
 	       printString(fullCommand[0]);
 	       metadata.parent_index = 0xFF;
 	       read(&metadata, &return_code);
-	       printString(metadata.buffer);
-    	} // elif untuk command lainnya
-    }    
+	       printString(metadata.buffer); */
+    	//} elif untuk command lainnya
+    //}    
     // else 
     //   printString("Unknown command\r\n");
     printString("\n");
@@ -85,46 +92,40 @@ void shell() {
   }
 }
 
-int parseCommand(char *command, char *arg) {
-  bool flag = false;
-  int i = 0;
-  int j = 0;
-  
-  while ((*command) == ' ') {
-    command ++;
-  }
-  
-  while ((*command) != '\0' && !flag) {
-    if (i >= 64) {
-    	flag = true;
-    } 
-    if ((*command) == ' ') {
-      *(arg + i + j) = 0;
-      j = j + ((i != 0) * 64);
-      i = 0;
-      break;
-    } else if ((*command) == '\\') {
-      command ++;
-      *(arg + i + j) = *command;
-      if (command == 0) {
-        flag = true;
-      }
-      i = i + !flag;
-      break;
-    } else {
-      *(arg + i + j) = *command;
-      i ++;
-    }
-    command ++;
-  }
-  *(arg + i + j) = 0;
-  if (flag) {
-    return -1;
-  }
-  return div(j, 64) + 1;
-}
+void splitCommand(char *input, char *com, char *args, char divider)
+{
+    int i = 0;
+    char *j = input;
+    int comLength = 0;
+    int argsLength = 0;
 
-//int cat(
+    while (*j != 0x00)
+    {
+        if (*j == divider)
+        {
+            if (i == 0)
+            {
+                i = 1;
+            }
+        }
+        else
+        {
+            if (i == 1)
+            {
+                args[argsLength] = *j;
+                argsLength++;
+            }
+            else
+            {
+                com[comLength] = *j;
+                comLength++;
+            }
+        }
+        j++;
+    }
+    args[argsLength] = 0x0;
+    com[comLength] = 0x0;
+}
 
 void printString(char *string) {
   int i = 0;
@@ -138,6 +139,7 @@ void printString(char *string) {
   // interrupt(0x10, 0xe00 + '\n', 0, 0, 0);
   // interrupt(0x10, 0xe00 + '\r', 0, 0, 0);
 }
+
 
 void readString(char *string){
   int i = 2;
@@ -172,6 +174,7 @@ void readString(char *string){
     }
   }
 }
+
 
 void clearScreen() {
    int AX, BX, DX;
@@ -270,8 +273,8 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
 
   // Pembacaan storage ke buffer
   readSector(sector_fs_buffer.sector_list, FS_SECTOR_SECTOR_NUMBER);
-  readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
-  readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
+  //readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
+  //readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
 
   // 1. Cari node dengan nama dan lokasi yang sama pada filesystem.
   //    Jika ditemukan node yang cocok, lanjutkan ke langkah ke-2.
@@ -284,7 +287,8 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
         readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER + 1);
       } else {
         readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER);
-      }
+      } 
+      readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER);
       if (node_fs_buffer.nodes[i].parent_node_index == (*metadata).parent_index) {
         if (node_fs_buffer.nodes[i].name[0] != 0x0) {
           nameMatch = true;
@@ -292,7 +296,7 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
           while (nameMatch && j < 14) {
             if ((*metadata).node_name[j] != node_fs_buffer.nodes[i].name[j]) {
               nameMatch = false;
-            } else if (node_fs_buffer.nodes[i].name[j] == '\0' && (*metadata).node_name[j] == '\0') {
+            } else if (node_fs_buffer.nodes[i].name[j] == '\0' && (*metadata).node_name[j] == '\0') {      
               break;
             }
           }
@@ -408,16 +412,16 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
   //    Jika ada entry kosong, simpan indeks untuk penulisan.
   //    Jika tidak ada entry kosong, tuliskan FS_W_MAXIMUM_NODE_ENTRY
   //    dan keluar.
-  for (nodeLine = 0; nodeLine < 64; nodeLine++) {
+  /* for (nodeLine = 0; nodeLine < 64; nodeLine++) {
     if (node_fs_buffer.nodes[nodeLine] == 0x00) {
       emptyFound = true;
       break;
     }
-  }
-  if (!emptyFound) {
+  } */
+  /* if (!emptyFound) {
     *return_code = FS_W_MAXIMUM_NODE_ENTRY;
     return;
-  }
+  } */
 
   // 3. Cek dan pastikan entry node pada indeks P adalah folder.
   //    Jika pada indeks tersebut adalah file atau entri kosong,

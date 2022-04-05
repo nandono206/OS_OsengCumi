@@ -26,3 +26,6 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code);
 void read(struct file_metadata *metadata, enum fs_retcode *return_code);
 
 void shell();
+
+void cat(char *name, byte cwd);
+void splitCommand(char *buffer, char *first, char *second, char delimiter);

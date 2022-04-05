@@ -59,17 +59,17 @@ bool strcmp(char *s1, char *s2) {
 }
     // Mengembalikan true jika string sama
     
-bool subStrCmp(char *s1, char *s2, int idx) {
+bool subStrCmp(char *s1, char *s2, int pos) {
     // Mengembalikan true jika string sama sampai dengan index ke-idx
     int i = 0;
     int j = 0;
     bool isEqual = true;
     do {
-        if (s1[idx] != s2[idx]) {
+        if (s1[i] != s2[i]) {
             isEqual = false;
         }
         i ++;
         j ++;
-    } while (isEqual && s1[idx] == '\0' && s2[idx] == '\0' && j <= idx);
+    } while (isEqual && s1[i] == '\0' && s2[i] == '\0' && j < pos);
     return isEqual;
 }

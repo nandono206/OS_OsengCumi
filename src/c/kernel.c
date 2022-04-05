@@ -85,6 +85,7 @@ void shell() {
       }
       else if (strcmp(command, "\r\nls")) {
         lsCommand(current_dir);
+        printString("\n");
         // printString("inside command\r\n");
       }
       else if (strcmp(command, "\r\ncd")){
@@ -423,6 +424,19 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
     *return_code = FS_W_MAXIMUM_NODE_ENTRY;
     return;
   } */
+  for (i = 0; i < 64; i++) {
+        if (strlen(node_fs_buffer.nodes[i].name) == 0) {
+            nodeEmpty = true;
+            nodeIdx = i;
+            break;
+        }
+    }
+
+    if (!nodeEmpty) {
+        printString("Caution: Maximum node entry.");
+        *return_code = FS_W_MAXIMUM_NODE_ENTRY;
+        return;
+    }
 
   // 3. Cek dan pastikan entry node pada indeks P adalah folder.
   //    Jika pada indeks tersebut adalah file atau entri kosong,
@@ -588,6 +602,7 @@ void ls(byte curr_dir){
       printString("\r\n");
     }
   }
+  printString("\r\n");
 
 
 }

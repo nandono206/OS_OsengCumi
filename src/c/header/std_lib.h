@@ -1,5 +1,3 @@
-
-
 #include "std_type.h"
 
 // Operator matematika umum
@@ -26,3 +24,6 @@ void strcpy(char *dst, char *src);
 
 void clear(byte *ptr, unsigned int n);
 // Mengosongkan byte array yang memiliki panjang n
+
+bool subStrCmp(char *s1, char *s2, int pos);
+// Mengembalikan true jika string sama sampai dengan posisi ke-pos (bukan index ke-pos)

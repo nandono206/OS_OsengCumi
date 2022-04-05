@@ -354,7 +354,7 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
   struct sector_filesystem sector_fs_buffer;
   struct map_filesystem    map_fs_buffer;
   // Tambahkan tipe data yang dibutuhkan
-  struct sector_entry sector_ent_buffer;
+  struct sector_entry sector_entry_buffer;
   bool nodeEmpty = false;
   bool sectorEmpty = false;
   int i = 0, j = 0;
@@ -466,12 +466,43 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
   //       dan sektor tujuan i
   //    7. Jika ukuran file yang telah tertulis lebih besar atau sama dengan
   //       filesize pada metadata, penulisan selesai
-  
+  strcpy(node_fs_buffer.nodes[nodeIdx].name, metadata->node_name);
+  node_fs_buffer.nodes[nodeIdx].parent_node_index = metadata->parent_index;
+
+  if (metadata->filesize != 0) {
+    node_fs_buffer.nodes[nodeIdx].sector_entry_index = sectorIdx;
+  } 
+  else {
+    node_fs_buffer.nodes[nodeIdx].sector_entry_index = FS_NODE_S_IDX_FOLDER;
+  }
+
+  for (i = 0; i < 255; i++) {
+    if (!map_fs_buffer.is_filled[i]) {
+      map_fs_buffer.is_filled[i] = true;
+      sector_entry_buffer.sector_numbers[j] = i;
+      writeSector(metadata->buffer, i);
+      metadata->filesize -= 512;
+      metadata->buffer += 512;
+      
+      if (metadata->filesize < 513) {
+        writeSector('\0', i + 1);
+         break;
+      }
+      j++;
+    }
+  }
+
   // 7. Lakukan update dengan memcpy() buffer entri sector dengan 
   //    buffer filesystem sector
   // 8. Lakukan penulisan seluruh filesystem (map, node, sector) ke storage
   //    menggunakan writeSector() pada sektor yang sesuai
   // 9. Kembalikan retcode FS_SUCCESS
+  memcpy(&(sector_fs_buffer.sector_list[sectorIdx]), &sector_entry_buffer, sizeof(struct sector_entry));
+  writeSector(sector_fs_buffer.sector_list, FS_SECTOR_SECTOR_NUMBER);
+  writeSector(&map_fs_buffer, FS_MAP_SECTOR_NUMBER);
+  writeSector(&(node_fs_buffer.nodes[0]), FS_NODE_SECTOR_NUMBER);
+  writeSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
+  *return_code = FS_SUCCESS;
 }
 
 void printCWD(char *path_str, byte curr_dir){
@@ -535,3 +566,17 @@ void ls(byte curr_dir){
 
 }
 
+void mkdir(char *name, byte cwd) {
+    struct file_metadata metadata;
+    enum fs_retcode retcode;
+
+    metadata.filesize = 0;
+    metadata.node_name = name;
+    metadata.parent_index = cwd;
+
+    write(&metadata, &retcode);
+
+    if (retcode != FS_SUCCESS) {
+        printString("Unable to make a new directory. \r\n");
+    }
+}

@@ -47,6 +47,45 @@ void handleInterrupt21(int AX, int BX, int CX, int DX) {
     }
 }
 
+int parseCommand(char *command, char *arg) {
+  bool flag = false;
+  int i = 0;
+  int j = 0;
+  
+  while ((*command) == ' ') {
+    command ++;
+  }
+  
+  while ((*command) != '\0' && !flag) {
+    if (i >= 64) {
+    	flag = true;
+    } 
+    if ((*command) == ' ') {
+      *(arg + i + j) = 0;
+      j = j + ((i != 0) * 64);
+      i = 0;
+      break;
+    } else if ((*command) == '\\') {
+      command ++;
+      *(arg + i + j) = *command;
+      if (command == 0) {
+        flag = true;
+      }
+      i = i + !flag;
+      break;
+    } else {
+      *(arg + i + j) = *command;
+      i ++;
+    }
+    command ++;
+  }
+  *(arg + i + j) = 0;
+  if (flag) {
+    return -1;
+  }
+  return div(j, 64) + 1;
+}
+
 void shell() {
   char input_buf[64];
   char path_str[128];

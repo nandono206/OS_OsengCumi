@@ -18,11 +18,7 @@ void clearScreen();
 void writeSector(byte *buffer, int sector_number);
 void readSector(byte *buffer, int sector_number);
 
-void fillMap();
-
 void write(struct file_metadata *metadata, enum fs_retcode *return_code);
 void read(struct file_metadata *metadata, enum fs_retcode *return_code);
-
-void printCWD(char *path_str, byte curr_dir);
 
 void shell();

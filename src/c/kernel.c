@@ -54,7 +54,7 @@ void shell() {
 
   while (true) {
     printString("OS@IF2230:");
-    printCWD(path_str, current_dir);
+    //printCWD(path_str, current_dir);
     printString("$");
     readString(input_buf);
    
@@ -182,9 +182,9 @@ void fillMap() {
     else if (i>255 && i<512){
       map_fs_buffer.is_filled[i] = true;
     }
-    // else{
-    //   map_fs_buffer.is_filled[i] = false;
-    // }
+    else{
+      map_fs_buffer.is_filled[i] = false;
+    }
     
   }
   
@@ -359,48 +359,3 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
 
 
 
-void printCWD(char *path_str, byte curr_dir){
-    char folderOrder[32];
-    char stringToShow[256];
-    byte dir[1024];
-    int i;
-    int fileNameIdx;
-    int current;
-
-    printString("~/");
-    current = 0;
-
-    //jika bukan  di root
-    if (curr_dir != 0xFF) 
-    {
-        readSector(dir, FS_NODE_SECTOR_NUMBER);
-        readSector(dir + 512, FS_MAP_SECTOR_NUMBER+1);
-        
-        i = 0;
-        while (curr_dir != 0xFF)
-        {
-            folderOrder[i] = curr_dir;
-            curr_dir = dir[curr_dir * 16];
-            i++;
-        }
-        i--;
-        while (i >= 0)
-        {
-            fileNameIdx = 0;
-            while (dir[folderOrder[i] * 16 + 2 + fileNameIdx] != 0x00)
-            {
-                stringToShow[current] = dir[folderOrder[i] * 16 + 2 + fileNameIdx];
-                fileNameIdx++;
-                current++;
-            }
-            if (i > 0)
-            {
-                stringToShow[current] = '/';
-                current++;
-            }
-            i--;
-        }
-        stringToShow[current] = 0x00;
-        printString(stringToShow);
-    }
-}

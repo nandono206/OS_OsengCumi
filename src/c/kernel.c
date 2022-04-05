@@ -343,19 +343,70 @@ void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
   struct sector_filesystem sector_fs_buffer;
   struct map_filesystem    map_fs_buffer;
   // Tambahkan tipe data yang dibutuhkan
+  bool found = false;
+  bool nameMatch;
+  int i = 0;
+  int S, j;
+  int counter = 0;
+  byte temp;
+  int nodeLine = 0;
 
   // Masukkan filesystem dari storage ke memori
-
+  readSector(map_fs_buffer.is_filled, FS_MAP_SECTOR_NUMBER);
+  readSector(node_fs_buffer.nodes, FS_NODE_SECTOR_NUMBER);
+  readSector(sector_fs_buffer.sector_list, FS_SECTOR_SECTOR_NUMBER);
 
   // 1. Cari node dengan nama dan lokasi parent yang sama pada node.
   //    Jika tidak ditemukan kecocokan, lakukan proses ke-2.
   //    Jika ditemukan node yang cocok, tuliskan retcode 
   //    FS_W_FILE_ALREADY_EXIST dan keluar. 
- 
+  while (!found && i < 64) {
+    for (i = 0; i < 64; i ++) {
+      if (i >= 32) {
+        readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER + 1);
+      } else {
+        readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER);
+      }
+      if (node_fs_buffer.nodes[i].parent_node_index == (*metadata).parent_index) {
+        if (node_fs_buffer.nodes[i].name[0] != 0x0) {
+          nameMatch = true;
+          j = 0;
+          while (nameMatch && j < 14) {
+            if ((*metadata).node_name[j] != node_fs_buffer.nodes[i].name[j]) {
+              nameMatch = false;
+            } else if (node_fs_buffer.nodes[i].name[j] == '\0' && (*metadata).node_name[j] == '\0') {
+              break;
+            }
+          }
+          if (nameMatch) {
+            S = node_fs_buffer.nodes[i].sector_entry_index;
+            found = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if (found) {
+    *return_code = FS_W_FILE_ALREADY_EXIST;
+    return;
+  }
+
   // 2. Cari entri kosong pada filesystem node dan simpan indeks.
   //    Jika ada entry kosong, simpan indeks untuk penulisan.
   //    Jika tidak ada entry kosong, tuliskan FS_W_MAXIMUM_NODE_ENTRY
   //    dan keluar.
+  for (nodeLine = 0; nodeLine < 64; nodeLine++) {
+    if (node_fs_buffer.nodes[nodeLine] == 0x00) {
+      emptyFound = true;
+      break;
+    }
+  }
+  if (!emptyFound) {
+    *return_code = FS_W_MAXIMUM_NODE_ENTRY;
+    return;
+  }
 
   // 3. Cek dan pastikan entry node pada indeks P adalah folder.
   //    Jika pada indeks tersebut adalah file atau entri kosong,

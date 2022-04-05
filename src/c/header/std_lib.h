@@ -26,3 +26,5 @@ void strcpy(char *dst, char *src);
 
 void clear(byte *ptr, unsigned int n);
 // Mengosongkan byte array yang memiliki panjang n
+
+bool strCmpN(char *s1, char *s2, int N);

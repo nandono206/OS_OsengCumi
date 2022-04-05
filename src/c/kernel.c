@@ -50,9 +50,11 @@ void handleInterrupt21(int AX, int BX, int CX, int DX) {
 void shell() {
   char input_buf[64];
   char path_str[128];
-  //char fullCommand[10][20];
+  char fullCommand[6][64];
   byte current_dir = FS_NODE_P_IDX_ROOT;
   int res;
+  struct file_metadata metadata;
+  enum fs_retcode return_code;
 
   while (true) {
     printString("OS@IF2230:");
@@ -61,17 +63,46 @@ void shell() {
     readString(input_buf);
     printString("\n");
     
-    //res = parseCommand(input_buf, fullCommand)
+    res = parseCommand(input_buf, &fullCommand);
+
+    printString(fullCommand);
+    printString("\n");
+    printString(fullCommand[2]);
+    printString("after\n");
+    printString("\n");
     
    
-    if (strcmp(input_buf, "\r\nls")) {
-      ls(current_dir);
-      // printString("inside command\r\n");
-    }
-    else 
-      printString("Unknown command\r\n");
     
     
+    
+    if (res != -1) {
+	//printString(" Valid!\r\n");
+    	if (strCmpN(fullCommand[0], "\r\ncat", 5)) {
+	       // Utility cat
+	       printString(" Berhasil!\r\n");
+	       //metadata.node_name = fullCommand[1];
+	       metadata.node_name = "file_luar";
+	       printString(fullCommand[0]);
+	       metadata.parent_index = 0xFF;
+	       read(&metadata, &return_code);
+	       printString(metadata.buffer);
+    	} // elif untuk command lainnya
+      else if (strcmp(input_buf, "\r\nls")) {
+        ls(current_dir);
+        printString("inside command\r\n");
+      }
+      else if (strCmpN(fullCommand, "\r\ncd", 4)){
+        printString("inside cd command\r\n");
+        cd(current_dir, "folder1", &current_dir);
+      }
+      else{
+        printString("Unknown command\r\n");
+      }
+    }    
+    // else 
+    //   printString("Unknown command\r\n");
+    printString("\n");
+    //ls(current_dir);
  
   }
 }
@@ -261,8 +292,8 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
 
   // Pembacaan storage ke buffer
   readSector(sector_fs_buffer.sector_list, FS_SECTOR_SECTOR_NUMBER);
-  // readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
-  // readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
+  readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
+  readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
 
   // 1. Cari node dengan nama dan lokasi yang sama pada filesystem.
   //    Jika ditemukan node yang cocok, lanjutkan ke langkah ke-2.
@@ -309,6 +340,7 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   if (S == 0xFF) {
     *return_code = FS_R_TYPE_IS_FOLDER;
   } else {
+  	
       // Pembacaan
       // 1. memcpy() entry sector sesuai dengan byte S
       // 2. Lakukan iterasi proses berikut, i = 0..15
@@ -330,7 +362,7 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
         if (sector_entry_buffer.sector_numbers[counter] == '0') {
           break;
         }
-        readSector(temp, sector_entry_buffer.sector_numbers[counter]);
+        readSector(&temp, sector_entry_buffer.sector_numbers[counter]);
         (*metadata).buffer[counter] = temp;
         counter ++;
       }
@@ -516,3 +548,50 @@ void ls(byte curr_dir){
 
 }
 
+void cd(byte parentIdx, char *targetName, byte *newParentIdx)
+{
+    enum fs_retcode return_code;
+    struct node_filesystem node_fs_buffer;
+    bool found;
+    int i;
+
+    readSector(&(node_fs_buffer.nodes[0]), FS_NODE_SECTOR_NUMBER);
+    readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
+
+    if (strcmp(targetName, ".."))
+    {
+        if (parentIdx == FS_NODE_P_IDX_ROOT)
+        {
+            printString("cd: root doesn't have parent directory\r\n");
+            return_code = FS_SUCCESS;
+            return;
+        }
+        *newParentIdx = node_fs_buffer.nodes[parentIdx].parent_node_index;
+        return;
+    }
+    if (strcmp(targetName, "/"))
+    {
+        *newParentIdx = FS_NODE_P_IDX_ROOT;
+        return_code = FS_SUCCESS;
+        return;
+    }
+    i = 0;
+    found = false;
+    while (i < 64 && !found)
+    {
+        if (node_fs_buffer.nodes[i].parent_node_index == parentIdx && strcmp(targetName, node_fs_buffer.nodes[i].name))
+        {
+            *newParentIdx = i;
+            return_code = FS_SUCCESS;
+            found = true;
+        }
+        i++;
+    }
+    if (!found)
+    {
+        printString("cd: no such file or directory: ");
+        printString(targetName);
+        printString("\r\n");
+        return_code = FS_R_NODE_NOT_FOUND;
+    }
+}

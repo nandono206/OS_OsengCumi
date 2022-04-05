@@ -21,6 +21,7 @@ void readSector(byte *buffer, int sector_number);
 void fillMap();
 void printCWD(char *path_str, byte curr_dir);
 void ls(byte curr_dir);
+void cd(byte parentIdx, char *targetName, byte *newParentIdx);
 
 void write(struct file_metadata *metadata, enum fs_retcode *return_code);
 void read(struct file_metadata *metadata, enum fs_retcode *return_code);

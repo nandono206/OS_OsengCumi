@@ -69,6 +69,7 @@ void shell() {
     // else 
     //   printString("Unknown command\r\n");
     printString("\n");
+    //ls(current_dir);
  
   }
 }
@@ -228,9 +229,7 @@ void fillMap() {
     else if (i>255 && i<512){
       map_fs_buffer.is_filled[i] = true;
     }
-    else{
-      map_fs_buffer.is_filled[i] = false;
-    }
+    
     
   }
   
@@ -447,5 +446,20 @@ void printCWD(char *path_str, byte curr_dir){
     }
 }
 
+void ls(byte curr_dir){
+  byte all[1024];
+  int i;
 
+  readSector(all, FS_MAP_SECTOR_NUMBER);
+  readSector(all + 512, FS_NODE_SECTOR_NUMBER+1);
+
+  for(i = 0; i<64; i++){
+    if (curr_dir == all[i * 16]){
+      printString(all + i * 16 + 2);
+      printString("\r\n");
+    }
+  }
+
+
+}
 

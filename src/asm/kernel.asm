@@ -5,7 +5,6 @@
 ;kernel.asm contains assembly functions that you can use in your kernel
 
 global _putInMemory
-global _interrupt
 global _makeInterrupt21
 global _launchProgram
 extern _handleInterrupt21

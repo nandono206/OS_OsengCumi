@@ -18,6 +18,12 @@ kernel:
 stdlib:
 	bcc -ansi -c -o out/std_lib.o src/c/std_lib.c
 
+shell:
+	bcc -ansi -c -o out/shell.o src/c/shell.c
+	bcc -ansi -c -o out/string.o src/c/string.c
+	nasm -f as86 src/asm/interrupt.asm -o out/lib_interrupt.o
+	ld86 -o out/shell -d out/shell.o out/lib_interrupt.o out/string.o
+
 run:
 	bochs -f src/config/if2230.config
 

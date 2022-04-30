@@ -47,7 +47,7 @@ shell:
 run:
 	nasm -f as86 src/asm/kernel.asm -o out/kernel_asm.o
 	nasm -f as86 src/asm/interrupt.asm -o out/lib_interrupt.o
-	ld86 -o out/kernel -d out/kernel.o out/kernel_asm.o out/lib_interrupt.o out/shell_control.o out./cp.o out/mv.o out/cat.o out/cd.o out/ls.o out/mkdir.o out/filesystem_utils.o out/std_lib.o
+	ld86 -o out/kernel -d out/kernel.o out/kernel_asm.o out/lib_interrupt.o out/shell_control.o out/cp.o out/mv.o out/cat.o out/cd.o out/ls.o out/mkdir.o out/filesystem_utils.o out/std_lib.o
 	dd if=out/kernel of=out/system.img bs=512 conv=notrunc seek=1
 	bochs -f src/config/if2230.config
 

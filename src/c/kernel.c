@@ -83,6 +83,7 @@ void shell() {
   byte current_dir = FS_NODE_P_IDX_ROOT;
   int res;
   struct file_metadata metadata;
+  struct file_metadata meta;
   enum fs_retcode return_code;
 
   while (true) {
@@ -130,7 +131,6 @@ void shell() {
       } else if (strcmp(command, "\r\nmv")) {
       	mv(args2, args1, current_dir);
       } else if (strcmp(command, "\r\ntest")) {
-        struct file_metadata meta;
         meta.node_name    = "shell";
         meta.parent_index = 0xFF;
         executeProgram(&meta, 0x2000);

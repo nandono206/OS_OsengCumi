@@ -1,5 +1,5 @@
 # Makefile
-all: shell-app diskimage inject bootloader stdlib fs_utils bin move shell kernel
+all: shell-app diskimage bootloader stdlib fs_utils bin move shell kernel
 
 # Recipes
 clear: 
@@ -43,40 +43,6 @@ move:
 shell:
 	bcc -ansi -c -o out/shell_control.o src/c/shell_control.c
 # out/kernel.o out/kernel_asm.o out/std_lib.o out/bin.o
-
-injector:
-	gcc src/injector.c tc_gen/tc_lib -o out/injector
-
-inject: injector
-	cd out && ./injector system.img
-
-inject-a:
-	mv out/system.img tc_gen
-	cd tc_gen && \
-	./tester A && \
-	cd ..
-	mv tc_gen/system.img out
-
-inject-b:
-	mv out/system.img tc_gen
-	cd tc_gen && \
-	./tester B && \
-	cd ..
-	mv tc_gen/system.img out
-
-inject-c:
-	mv out/system.img tc_gen
-	cd tc_gen && \
-	./tester C && \
-	cd ..
-	mv tc_gen/system.img out
-
-inject-d:
-	mv out/system.img tc_gen
-	cd tc_gen && \
-	./tester D && \
-	cd ..
-	mv tc_gen/system.img out
 
 run:
 	nasm -f as86 src/asm/kernel.asm -o out/kernel_asm.o

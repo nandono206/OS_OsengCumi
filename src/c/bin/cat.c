@@ -1,8 +1,8 @@
-#include "header/kernel.h"
-#include "header/filesystem.h"
-#include "header/std_lib.h"
-#include "header/program.h"
-#include "header/cat.h"
+#include "../header/kernel.h"
+#include "../header/filesystem.h"
+#include "../header/std_lib.h"
+#include "../header/program.h"
+#include "../header/cat.h"
 
 void cat(char* name, byte curr_dir) {
     enum fs_retcode return_code;

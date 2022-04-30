@@ -76,7 +76,8 @@ void executeProgram(struct file_metadata *metadata, int segment)
 void shell() {
   char input_buf[64];
   char command[64];
-  char args[64];
+  char args1[64];
+  char args2[64];
   char path_str[128];
   char fullCommand[10][64];
   byte current_dir = FS_NODE_P_IDX_ROOT;
@@ -91,14 +92,17 @@ void shell() {
     readString(input_buf);
     printString("\n");
     
-    splitCommand(input_buf, command, args, ' ');
+    splitCommand(input_buf, args2, args1, command, ' ');
+    printString(command);
+    printString(args1);
+    printString(args2);
     // printString(command);
     // printString("\n");
     // printString(args);
     
     /*if (res != -1) {
 	printString(" Valid!\r\n");
-    	if (strCmpN(fullCommand[0], "\r\ncat", 5)) {
+    	if (strCmpN(fullCommand[0], "\r\n", 5)) {
 	       // Utility cd
 	       printString(" Berhasil!\r\n");
 	       cat("file_luar", current_dir);
@@ -107,8 +111,7 @@ void shell() {
 	    
    // elif untuk command lainnya
       if (strcmp(command, "\r\ncat")){
-        printString(args);
-        cat(args, current_dir);
+        cat(args1, current_dir);
       }
       else if (strcmp(command, "\r\nls")) {
         lsCommand(current_dir);
@@ -117,13 +120,17 @@ void shell() {
       }
       else if (strcmp(command, "\r\ncd")){
         // printString("inside cd command\r\n");
-        cd(current_dir, args, &current_dir);
+        cd(current_dir, args1, &current_dir);
       }
       else if (strcmp(command, "\r\nmkdir")){
         // printString("inside cd command\r\n");
-        mkdir(args, current_dir);
+        mkdir(args1, current_dir);
+      } else if (strcmp(command, "\r\ncp")) {
+      	cp(args1, args2, current_dir);
+      } else if (strcmp(command, "\r\nmv")) {
+      	mv(args2, args1, current_dir);
       }
-      else{
+      else {
         printString("Unknown command\r\n");
       }
     }    
@@ -135,12 +142,13 @@ void shell() {
   
 }
 
-void splitCommand(char *input, char *com, char *args, char divider)
+void splitCommand(char *input, char *com, char *args1, char *args2, char divider)
 {
     int i = 0;
     char *j = input;
     int comLength = 0;
-    int argsLength = 0;
+    int args1Length = 0;
+    int args2Length = 0;
 
     while (*j != 0x00)
     {
@@ -149,25 +157,31 @@ void splitCommand(char *input, char *com, char *args, char divider)
             if (i == 0)
             {
                 i = 1;
+            } else if (i == 1) {
+            	i = 2;
             }
         }
         else
         {
             if (i == 1)
             {
-                args[argsLength] = *j;
-                argsLength++;
+            	args1[args1Length] = *j;
+                args1Length++;
+            } else if (i == 2) {
+            	com[comLength] = *j;
+                comLength++;
             }
             else
             {
-                com[comLength] = *j;
-                comLength++;
+                args2[args2Length] = *j;
+                args2Length++;
             }
         }
         j++;
     }
-    args[argsLength] = 0x0;
     com[comLength] = 0x0;
+    args1[args1Length] = 0x0;
+    args2[args2Length] = 0x0;
 }
 
 void printString(char *string) {
@@ -797,4 +811,44 @@ void cp(char *filename, char *tocopyname, byte currdir)
         printString("Error: Invalid folder.\r\n");
         break;
     }
+}
+
+void mv(char *dir, char* file, byte cwd) {
+    struct node_filesystem node_fs_buffer;
+    byte new_dir;
+    bool found = false;
+    int node_idx = 0;
+
+    readSector(&(node_fs_buffer.nodes[0]), FS_NODE_SECTOR_NUMBER);
+    readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
+
+    while (!found && node_idx < 64) {
+        if (strcmp(dir, node_fs_buffer.nodes[node_idx].name) && node_fs_buffer.nodes[node_idx].parent_node_index == cwd) {
+            new_dir = node_idx;
+            found = true;
+        }
+        node_idx ++;
+    }
+
+    if (!found) {
+        printString("Directory not found\n");
+        return;
+    }
+
+    found = false;
+    node_idx = 0;
+    while (!found && node_idx < 64) {
+        if (strcmp(file, node_fs_buffer.nodes[node_idx].name) && node_fs_buffer.nodes[node_idx].parent_node_index == cwd) {
+            node_fs_buffer.nodes[node_idx].parent_node_index = new_dir;
+            found = true;
+        }
+        node_idx ++;
+    }
+    if (!found) {
+        printString("File not found\n");
+        return;
+    }
+
+    writeSector(&(node_fs_buffer.nodes[0]), FS_NODE_SECTOR_NUMBER);
+    writeSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
 }

@@ -81,6 +81,7 @@ void shell() {
 	    
    // elif untuk command lainnya
       if (strcmp(command, "\r\ncat")){
+        printString(args);
         cat(args, current_dir);
       }
       else if (strcmp(command, "\r\nls")) {
@@ -270,27 +271,24 @@ void fillMap() {
 
 
 void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
+  
   // Tambahkan tipe data yang dibutuhkan
   struct node_filesystem   node_fs_buffer; // 1024 byte
   struct node_entry        node_buffer;
   struct sector_filesystem sector_fs_buffer; // 512 byte
   struct sector_entry      sector_entry_buffer;
-  struct sector_filesystem sector_fs_buffer2;
   
   bool found = false;
-  bool nameMatch;
-  int i = 0;
-  int S, j;
-  int counter = 0;
-  byte temp;
+  int i, j = 0;
+  int S;
 
   // Masukkan filesystem dari storage ke memori buffer
   // Asumsikan semua buffer filesystem diatas telah terinisiasi dengan baik
 
   // Pembacaan storage ke buffer
   readSector(sector_fs_buffer.sector_list, FS_SECTOR_SECTOR_NUMBER);
-  //readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
-  //readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
+  readSector(&(node_fs_buffer.nodes[0]),  FS_NODE_SECTOR_NUMBER);
+  readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
 
   // 1. Cari node dengan nama dan lokasi yang sama pada filesystem.
   //    Jika ditemukan node yang cocok, lanjutkan ke langkah ke-2.
@@ -298,36 +296,17 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   //    dan keluar.  
 
   while (!found && i < 64) {
-    for (i = 0; i < 64; i ++) {
-      if (i >= 32) {
-        readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER + 1);
-      } else {
-        readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER);
-      } 
-      readSector(&(node_fs_buffer.nodes[i]),  FS_NODE_SECTOR_NUMBER);
-      if (node_fs_buffer.nodes[i].parent_node_index == (*metadata).parent_index) {
-        if (node_fs_buffer.nodes[i].name[0] != 0x0) {
-          nameMatch = true;
-          j = 0;
-          while (nameMatch && j < 14) {
-            if ((*metadata).node_name[j] != node_fs_buffer.nodes[i].name[j]) {
-              nameMatch = false;
-            } else if (node_fs_buffer.nodes[i].name[j] == '\0' && (*metadata).node_name[j] == '\0') {      
-              break;
-            }
-          }
-          if (nameMatch) {
-            S = node_fs_buffer.nodes[i].sector_entry_index;
-            found = true;
-            break;
-          }
-        }
-      }
+    memcpy(&node_buffer, &(node_fs_buffer.nodes[i]), sizeof(struct node_entry));
+    if (node_buffer.parent_node_index == metadata->parent_index && strcmp(node_buffer.name, metadata->node_name)) {
+    	S = node_buffer.sector_entry_index;
+    	found = true;
     }
+    
   }
 
   if (!found) {
     *return_code = FS_R_NODE_NOT_FOUND;
+    return;
   }
 
   // 2. Cek tipe node yang ditemukan
@@ -335,8 +314,9 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
   //    Jika tipe node adalah folder, tuliskan retcode FS_R_TYPE_IS_FOLDER
   //    dan keluar.
 
-  if (S == 0xFF) {
+  if (S == FS_NODE_S_IDX_FOLDER) {
     *return_code = FS_R_TYPE_IS_FOLDER;
+    return;
   } else {
   	
       // Pembacaan
@@ -349,24 +329,16 @@ void read(struct file_metadata *metadata, enum fs_retcode *return_code) {
       // 6. Lompat ke iterasi selanjutnya hingga iterasi selesai
       // 7. Tulis retcode FS_SUCCESS dan ganti filesize 
             //pada akhir proses pembacaan.
-      memcpy(&node_buffer, &(node_fs_buffer.nodes[S]), sizeof(struct node_entry));
-      memcpy(
-            &sector_entry_buffer,
-            &(sector_fs_buffer.sector_list[S]),
-            sizeof(struct sector_entry)
-      );
-     
-      while (counter < 16) {
-        if (sector_entry_buffer.sector_numbers[counter] == '0') {
-          break;
-        }
-        readSector(&temp, sector_entry_buffer.sector_numbers[counter]);
-        (*metadata).buffer[counter] = temp;
-        counter ++;
+      memcpy(&sector_entry_buffer, &(sector_fs_buffer.sector_list[S]), sizeof(struct node_entry));
+     S = sector_entry_buffer.sector_numbers[j];
+      while (j < 15 && S != 0) {
+        readSector(&metadata->buffer[j*512], S);
+        j++;
+        S = sector_entry_buffer.sector_numbers[j];
       }
-      (*metadata).filesize = counter --;
+      (*metadata).filesize = j*512;
       *return_code = FS_SUCCESS;
-  }
+  } 
 }
 
 void write(struct file_metadata *metadata, enum fs_retcode *return_code) {
@@ -671,52 +643,27 @@ void mkdir(char *name, byte cwd) {
 }
 
 void cat(char* name, byte curr_dir){
-  struct node_filesystem node_fs_buffer;
-  struct file_metadata metadata;
-  enum fs_retcode return_code;
-  int idx;
-  int currDir = curr_dir;
-  bool found;
+    enum fs_retcode return_code;
+    struct file_metadata metadata;
+    struct node_entry node;
+    struct node_filesystem node_fs;
+    byte buffer[8192];
 
-  readSector(&(node_fs_buffer.nodes[0]), FS_NODE_SECTOR_NUMBER);
-  readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
-
-  while (idx < 64 && !found){
-    if (node_fs_buffer.nodes[idx].parent_node_index  == currDir){
-      if (strcmp(node_fs_buffer.nodes[idx].parent_node_index, name)){
-        found = true;
-        currDir = idx;
-      }
-    }
-    idx++;
-  }
-
-  if (!found){
-    printString("file not found!\r\n");
-  }
-
-  else{
-    clear(metadata.node_name, 14);
-    strcpy(metadata.node_name, name);
+    clear(buffer, 8192);
 
     metadata.parent_index = curr_dir;
+    metadata.buffer = buffer;
+    metadata.node_name = name;
+
     read(&metadata, &return_code);
-
-    if (return_code == FS_R_TYPE_IS_FOLDER){
-      printString("cat only support file (not folder)\r\n");
+    
+    if (return_code == FS_R_NODE_NOT_FOUND) {
+    	printString("File not found\n"); 	
+    } else if (return_code == FS_R_TYPE_IS_FOLDER) {
+    	printString("Not a file\n");
     }
-    else if ( return_code == FS_R_NODE_NOT_FOUND){
-      printString("not found!\r\n");
-    }
-    else{
-      printString(metadata.buffer);
-      clear(metadata.buffer, metadata.filesize);
-      clear(metadata.node_name, 14);
-    }
-  }
-
-
-
+    printString((char *)metadata.buffer);
+    printString("\n");
 }
 
 void lsCommand(byte curr_dir){

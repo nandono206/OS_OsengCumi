@@ -16,6 +16,9 @@ void printString(char *string);
 void readString(char *string);
 void clearScreen();
 
+void write(struct file_metadata *metadata, enum fs_retcode *return_code);
+void read(struct file_metadata *metadata, enum fs_retcode *return_code);
+
 void writeSector(byte *buffer, int sector_number);
 void readSector(byte *buffer, int sector_number);
 
@@ -27,9 +30,6 @@ void cat(char* name, byte curr_dir);
 void lsCommand(byte curr_dir);
 void cp(char *filename, char *tocopyname, byte currdir);
 void mv(char *dir, char* file, byte cwd);
-
-void write(struct file_metadata *metadata, enum fs_retcode *return_code);
-void read(struct file_metadata *metadata, enum fs_retcode *return_code);
 
 void shell();
 

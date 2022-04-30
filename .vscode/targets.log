@@ -6,8 +6,9 @@ make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --quest
 # PARTICULAR PURPOSE.
 
 # This program built for i386-pc-mingw32
+ 
 
-# Make data base, printed on Sat Apr 30 15:00:10 2022
+# Make data base, printed on Sat Apr 30 22:31:11 2022
 
 # Variables
 
@@ -60,7 +61,7 @@ PROGRAMW6432 = C:\Program Files
 # environment
 PROGRAMDATA = C:\ProgramData
 # environment
-VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-625daa43-6cd1-4afe-afba-45d1f1f22464-sock
+VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-532390ef-0bc8-4ac4-b634-4f3e774f4080-sock
 # environment
 VSCODE_CWD = C:\Users\Argakoesoemah\AppData\Local\Programs\Microsoft VS Code
 # environment
@@ -92,7 +93,7 @@ ELECTRON_RUN_AS_NODE = 1
 # automatic
 %F = $(notdir $%)
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_7664_FZXANVVBTYBOKUAM
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_11508_RUQRXIQXMIXDJFZP
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
@@ -187,7 +188,8 @@ APPDATA = C:\Users\Argakoesoemah\AppData\Roaming
 TEMP = C:\Users\ARGAKO~1\AppData\Local\Temp
 # environment
 COMSPEC = C:\WINDOWS\system32\cmd.exe
-# default
+# defaul 
+t
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
@@ -214,7 +216,7 @@ PROCESSOR_LEVEL = 6
 # environment
 FPS_BROWSER_APP_PROFILE_STRING = Internet Explorer
 # environment
-VSCODE_PID = 7664
+VSCODE_PID = 11508
 # environment
 USERDOMAIN_ROAMINGPROFILE = LAPTOP-5P9LFIRM
 # variable set hash-table stats:
@@ -233,7 +235,8 @@ USERDOMAIN_ROAMINGPROFILE = LAPTOP-5P9LFIRM
 # C:\Program Files\Go\bin (key C:/Program Files/Go/bin, mtime 1650386101): 4 files, no impossibilities.
 # C:\WINDOWS\System32\WindowsPowerShell\v1.0\ (key C:/WINDOWS/System32/WindowsPowerShell/v1.0/, mtime 1622898672): 30 files, no impossibilities.
 # C:\WINDOWS\System32\Wbem (key C:/WINDOWS/System32/Wbem, mtime 1642183616): 155 files, no impossibilities.
-# . (key c:/tugas-besar-os-osengcumi, mtime 1649177888): 9 files, no impossibilities.
+# . (key c:/tugas-besar-os-osengcumi, mtime 1 
+651315037): 9 files, no impossibilities.
 # C:\Program Files\MariaDB 10.6\bin (key C:/Program Files/MariaDB 10.6/bin, mtime 1643644747): 58 files, no impossibilities.
 # C:\Program Files\MySQL\MySQL Server 8.0\bin: could not be stat'd.
 # C:\ProgramData\chocolatey\bin (key C:/ProgramData/chocolatey/bin, mtime 1628424690): 13 files, no impossibilities.
@@ -248,7 +251,8 @@ USERDOMAIN_ROAMINGPROFILE = LAPTOP-5P9LFIRM
 # C:\Program Files\dotnet\ (key C:/Program Files/dotnet/, mtime 1647621662): 12 files, no impossibilities.
 # C:\Program Files\PostgreSQL\14\bin (key C:/Program Files/PostgreSQL/14/bin, mtime 1640185199): 71 files, no impossibilities.
 # C:\Program Files\Git\cmd (key C:/Program Files/Git/cmd, mtime 1628421879): 8 files, no impossibilities.
-# C:\WINDOWS\system32 (key C:/WINDOWS/system32, mtime 1650011850): 2890 files, no impossibilities.
+# C:\WINDOWS\system32 (key C:/WINDOWS/system32, mtime 1650011850): 2890  
+files, no impossibilities.
 # C:\Program Files\Java\jdk-17 (key C:/Program Files/Java/jdk-17, mtime 1632891655): 10 files, no impossibilities.
 # C:\Program Files (x86)\GnuWin32\bin (key C:/Program Files (x86)/GnuWin32/bin, mtime 1635093921): 5 files, no impossibilities.
 
@@ -311,7 +315,7 @@ kernel:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-04-05 15:02:06
+#  Last modified 2022-04-30 17:37:17
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -337,7 +341,8 @@ diskimage:
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
-# automatic
+#  
+automatic
 # @ := diskimage
 # automatic
 # % := 
@@ -372,6 +377,6 @@ diskimage:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Apr 30 15:00:10 2022
+# Finished Make data base on Sat Apr 30 22:31:11 2022
 
  

@@ -8,6 +8,7 @@
 #include "header/std_lib.h"
 #include "header/filesystem.h"
 #include "header/std_type.h"
+#include 
 
 int main() {
   char buf[512];
@@ -73,80 +74,7 @@ void executeProgram(struct file_metadata *metadata, int segment)
         printString("exec: file not found\r\n");
 }
 
-void shell() {
-  char input_buf[64];
-  char command[64];
-  char args1[64];
-  char args2[64];
-  char path_str[128];
-  char fullCommand[10][64];
-  byte current_dir = FS_NODE_P_IDX_ROOT;
-  int res;
-  struct file_metadata metadata;
-  struct file_metadata meta;
-  enum fs_retcode return_code;
 
-  while (true) {
-    printString("OS@IF2230:");
-    printCWD(path_str, current_dir);
-    printString("$");
-    readString(input_buf);
-    printString("\n");
-    
-    splitCommand(input_buf, args2, args1, command, ' ');
-    // printString(command);
-    // printString(args1);
-    // printString(args2);
-    // printString(command);
-    // printString("\n");
-    // printString(args);
-    
-    /*if (res != -1) {
-	printString(" Valid!\r\n");
-    	if (strCmpN(fullCommand[0], "\r\n", 5)) {
-	       // Utility cd
-	       printString(" Berhasil!\r\n");
-	       cat("file_luar", current_dir);
-	       */
-	       //metadata.node_name = fullCommand[1];
-	    
-   // elif untuk command lainnya
-      if (strcmp(command, "\r\ncat")){
-        cat(args1, current_dir);
-      }
-      else if (strcmp(command, "\r\nls")) {
-        lsCommand(current_dir);
-        printString("\n");
-        // printString("inside command\r\n");
-      }
-      else if (strcmp(command, "\r\ncd")){
-        // printString("inside cd command\r\n");
-        cd(current_dir, args1, &current_dir);
-      }
-      else if (strcmp(command, "\r\nmkdir")){
-        // printString("inside cd command\r\n");
-        mkdir(args1, current_dir);
-      } else if (strcmp(command, "\r\ncp")) {
-      	cp(args1, args2, current_dir);
-      } else if (strcmp(command, "\r\nmv")) {
-      	mv(args2, args1, current_dir);
-      } else if (strcmp(command, "\r\ntest")) {
-        meta.node_name    = "shell";
-        meta.parent_index = 0xFF;
-        executeProgram(&meta, 0x2000);
-    }
-
-      else {
-        printString("Unknown command\r\n");
-      }
-    }    
-    // else 
-    //   printString("Unknown command\r\n");
-    printString("\r\n");
-    //ls(current_dir);
- 
-  
-}
 
 
 

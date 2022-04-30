@@ -6,6 +6,7 @@
 // Fungsi bawaan
 extern void putInMemory(int segment, int address, byte b);
 extern int interrupt (int int_number, int AX, int BX, int CX, int DX);
+extern void launchProgram(int segment);
 extern void makeInterrupt21();
 
 void handleInterrupt21(int AX, int BX, int CX, int DX);
@@ -34,3 +35,5 @@ void shell();
 
 void cat(char *name, byte cwd);
 void splitCommand(char *buffer, char *first, char *second, char delimiter);
+
+void executeProgram(struct file_metadata *metadata, int segment);

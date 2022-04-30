@@ -1,5 +1,5 @@
 # Makefile
-all: diskimage bootloader stdlib kernel 
+all: diskimage bootloader stdlib kernel shell
 
 # Recipes
 diskimage:
@@ -21,8 +21,10 @@ stdlib:
 shell:
 	bcc -ansi -c -o out/shell.o src/c/shell.c
 	bcc -ansi -c -o out/string.o src/c/string.c
+	bcc -ansi -c -o out/string.o src/c/textio.c
 	nasm -f as86 src/asm/interrupt.asm -o out/lib_interrupt.o
 	ld86 -o out/shell -d out/shell.o out/lib_interrupt.o out/string.o
+	ld86 -o out/shell -d out/shell.o out/lib_interrupt.o out/textio.o
 
 run:
 	bochs -f src/config/if2230.config

@@ -93,9 +93,9 @@ void shell() {
     printString("\n");
     
     splitCommand(input_buf, args2, args1, command, ' ');
-    printString(command);
-    printString(args1);
-    printString(args2);
+    // printString(command);
+    // printString(args1);
+    // printString(args2);
     // printString(command);
     // printString("\n");
     // printString(args);
@@ -129,7 +129,13 @@ void shell() {
       	cp(args1, args2, current_dir);
       } else if (strcmp(command, "\r\nmv")) {
       	mv(args2, args1, current_dir);
-      }
+      } else if (strcmp(command, "\r\ntest")) {
+        struct file_metadata meta;
+        meta.node_name    = "shell";
+        meta.parent_index = 0xFF;
+        executeProgram(&meta, 0x2000);
+    }
+
       else {
         printString("Unknown command\r\n");
       }

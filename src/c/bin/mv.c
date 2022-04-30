@@ -2,6 +2,7 @@
 #include "header/filesystem.h"
 #include "header/std_lib.h"
 #include "header/program.h"
+#include "header/mv.h"
 
 void mv(char *dir, char* file, byte cwd) {
     struct node_filesystem node_fs_buffer;

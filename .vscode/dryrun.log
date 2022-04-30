@@ -1,12 +1,20 @@
-make.exe --dry-run --always-make --keep-going --print-directory
+make.exe --dry-run --keep-going --print-directory
 make.exe: Entering directory `c:/tugas-besar-os-osengcumi'
+bcc -ansi -c -o out/shell.o src/c/shell.c
+bcc -ansi -c -o out/textio.o src/c/textio.c
+nasm -f as86 src/asm/interrupt.asm -o out/lib_interrupt.o
+ld86 -o out/shell -d out/shell.o out/lib_interrupt.o out/textio.o
 dd if=/dev/zero of=out/system.img bs=512 count=2880
+gcc src/injector.c tc_gen/tc_lib -o out/injector
+cd out && ./injector system.img
+ 
 nasm src/asm/bootloader.asm -o out/bootloader
 dd if=out/bootloader of=out/system.img bs=512 count=1 conv=notrunc
 bcc -ansi -c -o out/std_lib.o src/c/std_lib.c
+bcc -ansi -c -o out/fs_utils.o src/c/fs_utils.c
+bcc -ansi -c src/c/utilities/*.c
+mv src/c/utilities/*.o out/
+bcc -ansi -c -o out/shell_kernel.o src/c/shell_kernel.c
 bcc -ansi -c -o out/kernel.o src/c/kernel.c
-nasm -f as86 src/asm/kernel.asm -o out/kernel_asm.o
-ld86 -o out/kernel -d out/kernel.o out/kernel_asm.o out/std_lib.o
-dd if=out/kernel of=out/system.img bs=512 conv=notrunc seek=1
 make.exe: Leaving directory `c:/tugas-besar-os-osengcumi'
  

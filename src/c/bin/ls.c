@@ -2,6 +2,7 @@
 #include "header/filesystem.h"
 #include "header/std_lib.h"
 #include "header/program.h"
+#include "header/ls.h"
 
 void lsCommand(byte curr_dir){
     struct node_filesystem node_fs_buffer;

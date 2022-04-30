@@ -12,9 +12,9 @@
 int main() {
   char buf[512];
   clearScreen();
-  fillMap();
   makeInterrupt21();
   printString("Halo dunia!\r\n");
+  initializeNode();
   shell();
   while(true) {
     readString(buf);

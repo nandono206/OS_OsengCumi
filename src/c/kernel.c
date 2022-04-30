@@ -76,7 +76,7 @@ void shell() {
     
     /*if (res != -1) {
 	printString(" Valid!\r\n");
-    	if (strCmpN(fullCommand[0], "\r\ncat", 5)) {
+    	if (strCmpN(fullCommand[0], "\r\n", 5)) {
 	       // Utility cd
 	       printString(" Berhasil!\r\n");
 	       cat("file_luar", current_dir);
@@ -101,6 +101,8 @@ void shell() {
         mkdir(args1, current_dir);
       } else if (strcmp(command, "\r\ncp")) {
       	cp(args1, args2, current_dir);
+      } else if (strcmp(command, "\r\nmv")) {
+      	mv(args2, args1, current_dir);
       }
       else {
         printString("Unknown command\r\n");
@@ -783,4 +785,44 @@ void cp(char *filename, char *tocopyname, byte currdir)
         printString("Error: Invalid folder.\r\n");
         break;
     }
+}
+
+void mv(char *dir, char* file, byte cwd) {
+    struct node_filesystem node_fs_buffer;
+    byte new_dir;
+    bool found = false;
+    int node_idx = 0;
+
+    readSector(&(node_fs_buffer.nodes[0]), FS_NODE_SECTOR_NUMBER);
+    readSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
+
+    while (!found && node_idx < 64) {
+        if (strcmp(dir, node_fs_buffer.nodes[node_idx].name) && node_fs_buffer.nodes[node_idx].parent_node_index == cwd) {
+            new_dir = node_idx;
+            found = true;
+        }
+        node_idx ++;
+    }
+
+    if (!found) {
+        printString("Directory not found\n");
+        return;
+    }
+
+    found = false;
+    node_idx = 0;
+    while (!found && node_idx < 64) {
+        if (strcmp(file, node_fs_buffer.nodes[node_idx].name) && node_fs_buffer.nodes[node_idx].parent_node_index == cwd) {
+            node_fs_buffer.nodes[node_idx].parent_node_index = new_dir;
+            found = true;
+        }
+        node_idx ++;
+    }
+    if (!found) {
+        printString("File not found\n");
+        return;
+    }
+
+    writeSector(&(node_fs_buffer.nodes[0]), FS_NODE_SECTOR_NUMBER);
+    writeSector(&(node_fs_buffer.nodes[32]), FS_NODE_SECTOR_NUMBER + 1);
 }

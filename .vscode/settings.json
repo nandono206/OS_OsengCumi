@@ -1,6 +1,7 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
     "files.associations": {
-        "kernel.h": "c"
+        "kernel.h": "c",
+        "std_lib.h": "c"
     }
 }

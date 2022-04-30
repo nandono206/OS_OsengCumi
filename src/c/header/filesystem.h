@@ -1,5 +1,3 @@
-// Filesystem data structure
-
 #include "std_type.h"
 
 #define FS_MAP_SECTOR_NUMBER    0x100
@@ -9,13 +7,13 @@
 #define FS_NODE_P_IDX_ROOT   0xFF
 #define FS_NODE_S_IDX_FOLDER 0xFF
 
-// Untuk filesystem map
+
 struct map_filesystem {
     bool is_filled[512];
 };
 
 
-// Untuk filesystem nodes
+
 struct node_entry {
     byte parent_node_index;
     byte sector_entry_index;
@@ -27,7 +25,6 @@ struct node_filesystem {
 };
 
 
-// Untuk filesystem sector
 struct sector_entry {
     byte sector_numbers[16];
 };
@@ -37,7 +34,6 @@ struct sector_filesystem {
 };
 
 
-// Struktur data untuk read / write
 struct file_metadata {
     byte *buffer;
     char *node_name;
@@ -45,7 +41,6 @@ struct file_metadata {
     unsigned int filesize;
 };
 
-// Untuk error code write & read
 enum fs_retcode {
     FS_UNKNOWN_ERROR    = -1,
     FS_SUCCESS          = 0,

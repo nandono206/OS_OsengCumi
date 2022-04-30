@@ -1,5 +1,5 @@
 # Makefile
-all: diskimage bootloader stdlib kernel
+all: diskimage bootloader stdlib kernel 
 
 # Recipes
 diskimage:

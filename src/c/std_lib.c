@@ -20,6 +20,15 @@ void memcpy(byte *dest, byte *src, unsigned int n) {
     }
 }
 
+void clear(byte *ptr, unsigned int n) {
+    // Mengosongkan byte array yang memiliki panjang n
+    int i = 0;
+    while (i < n) {
+        ptr[i] = 0x0;
+        i ++;
+    }
+}
+
 unsigned int strlen(char *string) {
     int i = 0;
     while (string[i] != '\0')
@@ -35,15 +44,6 @@ void strcpy(char *dst, char *src) {
         i ++;
     } while (src[i] != '\0');// src[i] == '\0'
     dst[i] = '\0';
-}
-
-void clear(byte *ptr, unsigned int n) {
-    // Mengosongkan byte array yang memiliki panjang n
-    int i = 0;
-    while (i < n) {
-        ptr[i] = 0x0;
-        i ++;
-    }
 }
 
 bool strcmp(char *s1, char *s2) {
@@ -69,7 +69,5 @@ bool strCmpN(char *s1, char *s2, int N) {
        flag = false;
      }
      i ++;
-   }
-   return flag;
-}
-
+     }
+}     

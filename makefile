@@ -35,13 +35,13 @@ bin:
 	bcc -ansi -c src/c/bin/*.c
 
 fs_utils:
-	bcc -ansi -c -o out/fs_utils.o src/c/fs_utils.c
+	bcc -ansi -c -o out/filesystem_utils.o src/c/filesystem_utils.c
 
 move:
 	mv src/c/bin/*.o out/
 
 shell:
-	bcc -ansi -c -o out/shell_kernel.o src/c/shell_kernel.c
+	bcc -ansi -c -o out/shell_control.o src/c/shell_control.c
 # out/kernel.o out/kernel_asm.o out/std_lib.o out/bin.o
 
 injector:
@@ -81,7 +81,7 @@ inject-d:
 run:
 	nasm -f as86 src/asm/kernel.asm -o out/kernel_asm.o
 	nasm -f as86 src/asm/interrupt.asm -o out/lib_interrupt.o
-	ld86 -o out/kernel -d out/kernel.o out/kernel_asm.o out/lib_interrupt.o out/shell_kernel.o out/mv.o out/cat.o out/cd.o out/ls.o out/mkdir.o out/printCWD.o out/args_split.o out/fs_utils.o out/std_lib.o
+	ld86 -o out/kernel -d out/kernel.o out/kernel_asm.o out/lib_interrupt.o out/shell_control.o out/mv.o out/cat.o out/cd.o out/ls.o out/mkdir.o out/printCWD.o out/args_split.o out/fs_utils.o out/std_lib.o
 	dd if=out/kernel of=out/system.img bs=512 conv=notrunc seek=1
 	bochs -f src/config/if2230.config
 

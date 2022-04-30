@@ -1,5 +1,3 @@
-// Implementasi tipe data umum
-
 #ifndef _STD_TYPE_H
 #define _STD_TYPE_H
 

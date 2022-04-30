@@ -8,7 +8,6 @@
 #include "header/std_lib.h"
 #include "header/filesystem.h"
 #include "header/std_type.h"
-#include "header/string.h"
 
 int main() {
   char buf[512];

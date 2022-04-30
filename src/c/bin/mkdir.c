@@ -1,8 +1,8 @@
-#include "header/kernel.h"
-#include "header/filesystem.h"
-#include "header/std_lib.h"
-#include "header/program.h"
-#include "header/mkdir.h"
+#include "../header/kernel.h"
+#include "../header/filesystem.h"
+#include "../header/std_lib.h"
+#include "../header/program.h"
+#include "../header/mkdir.h"
 
 void mkdir(char *name, byte cwd) {
     struct file_metadata metadata;

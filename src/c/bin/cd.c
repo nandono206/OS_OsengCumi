@@ -1,8 +1,8 @@
-#include "header/kernel.h"
-#include "header/filesystem.h"
-#include "header/std_lib.h"
-#include "header/program.h"
-#include "header/cd.h"
+#include "../header/kernel.h"
+#include "../header/filesystem.h"
+#include "../header/std_lib.h"
+#include "../header/program.h"
+#include "../header/cd.h"
 
 void cd(byte parentIdx, char *targetName, byte *newParentIdx) {
     enum fs_retcode return_code;

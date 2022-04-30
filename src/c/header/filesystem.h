@@ -1,3 +1,6 @@
+#ifndef __FILESYSTEM_H_
+#define __FILESYSTEM_H_
+
 #include "std_type.h"
 
 #define FS_MAP_SECTOR_NUMBER    0x100
@@ -53,3 +56,5 @@ enum fs_retcode {
     FS_W_MAXIMUM_SECTOR_ENTRY = 6,
     FS_W_INVALID_FOLDER       = 7
 };
+
+#endif

@@ -1,8 +1,8 @@
-#include "header/kernel.h"
-#include "header/filesystem.h"
-#include "header/std_lib.h"
-#include "header/program.h"
-#include "header/cp.h"
+#include "../header/kernel.h"
+#include "../header/filesystem.h"
+#include "../header/std_lib.h"
+#include "../header/program.h"
+#include "../header/cp.h"
 
 void cp(char *filename, char *tocopyname, byte currdir) {
     byte buffer[8192];

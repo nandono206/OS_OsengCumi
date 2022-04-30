@@ -1,3 +1,5 @@
+#include "header/textio.h"
+
 extern int interrupt(int num, int AX, int BX, int CX, int DX);
 
 int puts(char *str) {
